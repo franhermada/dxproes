@@ -10,7 +10,7 @@ export default function App() {
   useEffect(() => {
     const obtenerCaso = async () => {
       try {
-        const res = await fetch("http://localhost:3000/api/caso");
+        const res = await fetch("https://dxproes-backend.onrender.com/api/caso");
         const data = await res.json();
         setMessages([{ texto: data.respuesta, autor: "bot" }]);
       } catch (error) {
@@ -28,7 +28,7 @@ export default function App() {
     setInput("");
 
     try {
-      const respuesta = await fetch("http://localhost:3000/api/preguntar", {
+      const respuesta = await fetch("https://dxproes-backend.onrender.com/api/preguntar", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ pregunta: input }),
