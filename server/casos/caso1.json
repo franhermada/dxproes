@@ -1,0 +1,62 @@
+{
+  "presentacion": "Paciente masculino que consulta en guardia por dolor torácico.",
+  "respuestas": {
+    "nombre": {
+      "variantes": ["como te llamas", "nombre", "quien sos", "decime tu nombre"],
+      "respuesta": "Me llamo Juan."
+    },
+    "edad": {
+      "variantes": ["cuantos años tenes", "edad", "que edad tenes", "tu edad"],
+      "respuesta": "Tengo 55 años."
+    },
+    "inicio": {
+      "variantes": ["cuando empezo", "desde cuando", "hace cuanto", "cuando arranco"],
+      "respuesta": "El dolor empezó hace 2 horas."
+    },
+    "localizacion": {
+      "variantes": ["donde te duele", "ubicacion del dolor", "en que parte", "donde lo sentis"],
+      "respuesta": "Lo siento en el pecho, en el medio."
+    },
+    "irradiacion": {
+      "variantes": ["se te va para algun lado", "se corre", "irradia", "va para otro lado"],
+      "respuesta": "Sí, se me va hacia el brazo izquierdo."
+    },
+    "caracteristicas": {
+      "variantes": ["como es el dolor", "que tipo de dolor", "descripcion del dolor", "como lo sentis"],
+      "respuesta": "Es un dolor opresivo, como si me apretaran el pecho."
+    },
+    "intensidad": {
+      "variantes": ["cuanto te duele", "intensidad", "escala del 1 al 10", "dolor fuerte"],
+      "respuesta": "En una escala del 1 al 10, diría 8."
+    },
+    "alivio": {
+      "variantes": ["que lo calma", "que lo mejora", "algo lo alivia", "como se te pasa"],
+      "respuesta": "Me calma un poco cuando me siento y respiro hondo."
+    },
+    "factores": {
+      "variantes": ["que lo empeora", "algo lo hace peor", "factores de riesgo"],
+      "respuesta": "Se pone peor cuando camino o hago esfuerzo."
+    },
+    "antecedentes": {
+      "variantes": ["antecedentes", "tenes enfermedades", "alguna enfermedad", "sos hipertenso"],
+      "respuesta": "Tengo hipertensión hace años y colesterol alto."
+    },
+    "habitos": {
+      "variantes": ["fumas", "tabaco", "cigarro", "bebes", "alcohol"],
+      "respuesta": "Fumo un atado por día desde hace 30 años."
+    },
+    "actividad_fisica": {
+      "variantes": ["haces ejercicio", "actividad fisica", "caminar", "gimnasio"],
+      "respuesta": "No hago ejercicio, soy bastante sedentario."
+    },
+    "medicacion": {
+      "variantes": ["tomás medicación", "que remedios tomas", "medicamentos"],
+      "respuesta": "Tomo enalapril para la presión."
+    },
+    "familiares": {
+      "variantes": ["antecedentes familiares", "tu familia tuvo algo", "familia"],
+      "respuesta": "Mi papá falleció de un infarto a los 60 años."
+    }
+  },
+  "desconocido": "No entendí tu pregunta, ¿podés reformularla?"
+}

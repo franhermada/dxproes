@@ -1,0 +1,73 @@
+{
+  "case1": {
+    "id": 1,
+    "title": "Dolor torácico opresivo - IAM con ST",
+    "initial": "Paciente masculino de 55 años acude a la guardia por dolor torácico opresivo de 2 horas de evolución.",
+    "qa": [
+      {
+        "questions": ["¿Cómo es el dolor?", "describa el dolor", "qué siente", "tipo de dolor"],
+        "answer": "Es un dolor opresivo, fuerte, como si me aplastaran el pecho."
+      },
+      {
+        "questions": ["¿Dónde le duele?", "localización del dolor", "dónde siente el dolor", "zona del dolor"],
+        "answer": "En el centro del pecho."
+      },
+      {
+        "questions": ["¿Se irradia?", "se corre a algún lado", "hacia dónde se va el dolor"],
+        "answer": "Sí, se va hacia el brazo izquierdo y la mandíbula."
+      },
+      {
+        "questions": ["¿Desde cuándo comenzó?", "hace cuánto empezó", "tiempo de evolución"],
+        "answer": "Hace unas 2 horas."
+      },
+      {
+        "questions": ["¿Qué hacía cuando empezó?", "qué estaba haciendo", "actividad al inicio"],
+        "answer": "Estaba subiendo unas escaleras."
+      },
+      {
+        "questions": ["¿Tiene dificultad para respirar?", "le falta el aire", "disnea"],
+        "answer": "Sí, me falta el aire."
+      },
+      {
+        "questions": ["¿Sudoración?", "¿Náuseas?", "suda mucho", "transpiración"],
+        "answer": "Estoy transpirando mucho y tengo un poco de náuseas."
+      },
+      {
+        "questions": ["¿Mareos?", "¿Se desmayó?", "siente vértigo"],
+        "answer": "Me siento mareado, pero no me desmayé."
+      },
+      {
+        "questions": ["¿Antecedentes médicos?", "enfermedades previas", "tiene algo de antes", "patologías previas"],
+        "answer": "Soy hipertenso desde hace años y tengo colesterol alto."
+      },
+      {
+        "questions": ["¿Toma medicación?", "medicamentos", "qué toma"],
+        "answer": "Sí, enalapril y atorvastatina."
+      },
+      {
+        "questions": ["¿Fuma?", "tabaquismo", "cigarrillo"],
+        "answer": "Sí, fumo desde los 20 años, un paquete por día."
+      },
+      {
+        "questions": ["¿Antecedentes familiares?", "familiares enfermos", "historia familiar"],
+        "answer": "Mi padre murió de un infarto a los 60."
+      },
+      {
+        "questions": ["signos vitales", "constantes", "vitales"],
+        "answer": "TA: 160/95 mmHg, FC: 105 lpm, FR: 24 rpm, SatO₂: 91%, T: 37.2°C."
+      },
+      {
+        "questions": ["electrocardiograma", "electro", "ecg"],
+        "answer": "El electro muestra elevación del ST en cara inferior."
+      },
+      {
+        "questions": ["laboratorio", "análisis de sangre", "enzimas cardíacas"],
+        "answer": "Troponinas elevadas, CK-MB positiva."
+      },
+      {
+        "questions": ["radiografía de tórax", "rx tórax", "placa de tórax"],
+        "answer": "La radiografía no muestra alteraciones agudas."
+      }
+    ]
+  }
+}
