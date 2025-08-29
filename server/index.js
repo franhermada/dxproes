@@ -19,7 +19,7 @@ app.use(express.json());
 let clinicalCaseData = null;
 
 
-const jsonFilePath = path.join(__dirname,'casos', 'caso1.json'); 
+const jsonFilePath = path.join(__dirname, 'casos', 'caso1.json');
 
 try {
   const fileContent = fs.readFileSync(jsonFilePath, 'utf8');
