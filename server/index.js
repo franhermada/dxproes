@@ -18,8 +18,8 @@ app.use(express.json());
 // Variable para almacenar el caso clínico cargado
 let clinicalCaseData = null;
 
-// --- Carga del archivo JSON del caso clínico al iniciar el servidor ---
-const jsonFilePath = path.join(__dirname, 'caso1.json'); 
+
+const jsonFilePath = path.join(__dirname,'casos', 'caso1.json'); 
 
 try {
   const fileContent = fs.readFileSync(jsonFilePath, 'utf8');
