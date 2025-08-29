@@ -10,7 +10,7 @@
       "respuesta": "Tengo 55 años."
     },
     "Motivo de Consulta": {
-      "variantes": ["por qué viene", "a que viene", "que lo trae por acá"],
+      "variantes": ["por qué viene", "a que viene", "que lo trae por acá","por que venis"],
       "respuesta": "Vine porque me duele el pecho."
     },
     "inicio": {
