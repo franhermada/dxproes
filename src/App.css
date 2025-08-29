@@ -21,7 +21,7 @@
 }
 
 .logo {
-  width: 100px;   /* achicamos logo */
+  width: 100px; /* achicamos logo */
   height: auto;
   margin-bottom: 0.5rem;
 }
@@ -32,7 +32,7 @@
   color: #0d1b2a;
 }
 
-/* Chat container */
+/* Chat container - Centrado y con mayor ancho */
 .chat-container {
   display: flex;
   flex-direction: column;
@@ -40,13 +40,13 @@
   backdrop-filter: blur(10px);
   border-radius: 12px;
   padding: 1rem;
-  width: 100%;
-  max-width: 700px;
-  margin: 0 auto; /* centrar */
+  width: 95%; /* Ocupa más ancho en pantallas pequeñas */
+  max-width: 700px; /* Ancho máximo para pantallas grandes */
+  margin: 0 auto; /* Centrar horizontalmente */
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
 }
 
-/* Chat messages */
+/* Chat messages - Mejoras para burbujas */
 .chat-box {
   flex: 1;
   overflow-y: auto;
@@ -55,51 +55,76 @@
   display: flex;
   flex-direction: column;
   gap: 0.5rem;
-  max-height: 60vh;
+  max-height: 60vh; /* Altura máxima del chat */
+  scrollbar-width: thin; /* Para navegadores basados en Firefox */
+  scrollbar-color: #5271ff #f0f0f0; /* Color del scrollbar */
 }
 
-/* Estilos tipo globo */
+/* Estilos para el scrollbar en WebKit (Chrome, Safari) */
+.chat-box::-webkit-scrollbar {
+  width: 8px;
+}
+
+.chat-box::-webkit-scrollbar-track {
+  background: #f0f0f0;
+  border-radius: 10px;
+}
+
+.chat-box::-webkit-scrollbar-thumb {
+  background-color: #5271ff;
+  border-radius: 10px;
+  border: 2px solid #f0f0f0;
+}
+
+
+/* Estilos tipo globo de mensaje */
 .message {
-  padding: 0.6rem 1rem;
-  border-radius: 18px;
-  max-width: 75%;
-  word-wrap: break-word;
+  padding: 0.8rem 1.2rem; /* Aumento del padding para mejor visualización */
+  border-radius: 20px; /* Bordes más redondeados */
+  max-width: 80%; /* Un poco más de ancho permitido */
+  word-wrap: break-word; /* Asegura que el texto largo se ajuste */
+  position: relative; /* Para la "colita" del globo si se desea añadir */
 }
 
 .message.usuario {
-  background: #5271ff;
+  background: #5271ff; /* Color azul para mensajes del usuario */
   color: white;
-  align-self: flex-end;
-  border-bottom-right-radius: 4px;
+  align-self: flex-end; /* Alinear a la derecha */
+  border-bottom-right-radius: 5px; /* Pequeño ajuste para la "colita" */
 }
 
 .message.bot {
-  background: #e5e7eb;
-  color: #111827;
-  align-self: flex-start;
-  border-bottom-left-radius: 4px;
+  background: #e0e0e0; /* Color gris claro para mensajes del bot */
+  color: #333; /* Color de texto oscuro */
+  align-self: flex-start; /* Alinear a la izquierda */
+  border-bottom-left-radius: 5px; /* Pequeño ajuste para la "colita" */
 }
 
 /* Input */
 .input-area {
   display: flex;
   gap: 0.5rem;
+  padding: 0.5rem 0; /* Espacio alrededor del input */
+  align-items: center;
 }
 
 .input-area input {
   flex: 1;
-  padding: 0.6rem;
+  padding: 0.8rem 1rem; /* Aumento del padding del input */
   border: 1px solid #ccc;
-  border-radius: 8px;
+  border-radius: 20px; /* Bordes más redondeados */
+  font-size: 1rem;
 }
 
 .input-area button {
   background: #5271ff;
   color: white;
-  padding: 0.6rem 1rem;
+  padding: 0.8rem 1.5rem; /* Aumento del padding del botón */
   border: none;
-  border-radius: 8px;
+  border-radius: 20px; /* Bordes más redondeados */
   cursor: pointer;
+  font-weight: bold;
+  transition: background 0.3s ease; /* Transición suave en hover */
 }
 
 .input-area button:hover {

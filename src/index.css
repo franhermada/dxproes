@@ -1,20 +1,14 @@
-/* Fondo global */
+
 body {
   margin: 0;
   font-family: Arial, sans-serif;
-  background-image: url("/fondo.png");
-  background-size: cover;
-  background-position: center;
-  background-attachment: fixed;
+  background-image: url("/fondo.png"); 
+  background-size: cover; 
+  background-position: center; 
+  background-attachment: fixed; 
   min-height: 100vh;
-}
-
-/* Centrado general */
-.app-container {
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-start;
-  align-items: center;
-  min-height: 100vh;
-  padding: 2rem 1rem;
+  display: flex; 
+  justify-content: center; 
+  align-items: center; 
+  overflow-y: auto; 
 }

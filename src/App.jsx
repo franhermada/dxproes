@@ -1,10 +1,10 @@
 import { useState, useEffect } from "react";
-import "./App.css";
-import "./index.css"; // estilos globales
+import "./App.css"; // Tus estilos específicos del componente
+import "./index.css"; // Estilos globales, incluyendo el fondo
 
 export default function App() {
   const [messages, setMessages] = useState([]);
-  const [input, setInput] = useState(" ");
+  const [input, setInput] = useState(""); // Inicializado como cadena vacía para evitar espacios extra
 
   // URL del backend en Render
   const BACKEND_URL = "https://dxproes-backend.onrender.com";
@@ -37,10 +37,11 @@ export default function App() {
 
   // 🔹 Manejar envío de mensaje del usuario
   const handleSendMessage = async () => {
-    if (!input.trim()) return;
+    if (!input.trim()) return; // No enviar mensajes vacíos
 
+    // Añadir mensaje del usuario inmediatamente al historial
     setMessages(prev => [...prev, { texto: input, autor: "usuario" }]);
-    setInput("");
+    setInput(""); // Limpiar el input
 
     try {
       const respuesta = await fetch(`${BACKEND_URL}/api/preguntar`, {
@@ -51,6 +52,7 @@ export default function App() {
 
       const data = await respuesta.json();
 
+      // Añadir respuesta del bot al historial
       setMessages(prev => [...prev, { texto: data.respuesta, autor: "bot" }]);
     } catch (error) {
       setMessages(prev => [...prev, { texto: "⚠️ Error al conectar con el servidor", autor: "bot" }]);
@@ -58,32 +60,23 @@ export default function App() {
   };
 
   return (
-    <div
-      className="min-h-screen flex items-center justify-center"
-      style={{
-        backgroundImage: "url('/fondo.png')",
-        backgroundSize: "cover",
-        backgroundPosition: "center",
-      }}
-    >
-      <div className="bg-black/40 backdrop-blur-md rounded-xl shadow-lg w-full max-w-2xl p-6 flex flex-col">
+    // El contenedor principal ya no necesita estilos de fondo si el body los maneja
+    // Eliminamos el `style` inline aquí para que `index.css` lo controle
+    <div className="min-h-screen flex items-center justify-center w-full"> {/* Este div centra el contenido de la app */}
+      <div className="bg-black/40 backdrop-blur-md rounded-xl shadow-lg w-full max-w-2xl p-6 flex flex-col chat-container">
         
         {/* Logo y título */}
-        <div className="flex flex-col items-center mb-4">
+        <div className="flex flex-col items-center mb-4 header"> {/* Clase header para estilos */ }
           <img src="/DxPro.png" alt="DxPro Logo" className="logo w-24 h-24" />
-          <h1 className="text-2xl font-bold text-white">BIENVENIDO A DXPRO</h1>
+          <h1 className="text-2xl font-bold text-white title">BIENVENIDO A DXPRO</h1>
         </div>
 
         {/* Chat */}
-        <div className="flex-1 overflow-y-auto space-y-3 mb-4 p-3">
+        <div className="flex-1 overflow-y-auto space-y-3 mb-4 p-3 chat-box"> {/* Clase chat-box para estilos */}
           {messages.map((msg, i) => (
             <div
               key={i}
-              className={`p-3 rounded-lg max-w-xs ${
-                msg.autor === "usuario"
-                  ? "bg-blue-600 text-white self-end ml-auto animate-fadeIn"
-                  : "bg-gray-200 text-gray-800 self-start animate-fadeIn"
-              }`}
+              className={`message ${msg.autor} animate-fadeIn`} // Clases 'message' y autor para burbujas
             >
               {msg.texto}
             </div>
@@ -91,7 +84,7 @@ export default function App() {
         </div>
 
         {/* Input */}
-        <div className="flex gap-2">
+        <div className="flex gap-2 input-area"> {/* Clase input-area para estilos */}
           <input
             type="text"
             className="flex-1 p-2 border rounded"
