@@ -4,20 +4,16 @@ import fs from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
 
-// Helper para __dirname en módulos ES
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 const app = express();
 const PORT = process.env.PORT || 5000;
 
-// Configuración de CORS
 app.use(cors({ origin: "http://localhost:5173" }));
 app.use(express.json());
 
-// Variable para almacenar el caso clínico cargado
 let clinicalCaseData = null;
-
 
 const jsonFilePath = path.join(__dirname, 'casos', 'caso1.json');
 
@@ -26,12 +22,9 @@ try {
   clinicalCaseData = JSON.parse(fileContent);
   console.log('✅ Archivo caso1.json cargado exitosamente.');
 } catch (error) {
-  console.error('❌ Error al cargar o parsear el archivo caso1.json:', error);
-  // Si el archivo JSON es crítico, la aplicación podría no funcionar correctamente.
-  // Podrías decidir salir del proceso: process.exit(1); 
+  console.error('❌ Error al cargar o parsear el archivo caso1.json:', error); 
 }
 
-// --- Funciones auxiliares para llamadas a la API de Gemini ---
 
 async function callGeminiTextAPI(prompt, chatHistory = [], generationConfig = {}) {
   const updatedChatHistory = [...chatHistory, { role: "user", parts: [{ text: prompt }] }];
@@ -39,7 +32,7 @@ async function callGeminiTextAPI(prompt, chatHistory = [], generationConfig = {}
   const payload = {
     contents: updatedChatHistory,
     generationConfig: {
-      temperature: 0.2, // Reducir temperatura para respuestas más directas y menos creativas
+      temperature: 0.2, 
       maxOutputTokens: 500,
       ...generationConfig
     }
@@ -91,14 +84,11 @@ async function callGeminiTextAPI(prompt, chatHistory = [], generationConfig = {}
   throw new Error("Fallo después de múltiples reintentos al llamar a la API de Gemini Text.");
 }
 
-// --- Rutas de la API ---
 
-// Ruta de Bienvenida
 app.get("/", (_req, res) => {
   res.send("DxPro API OK");
 });
 
-// Ruta para obtener la presentación inicial del caso
 app.get("/api/caso", (req, res) => {
     if (clinicalCaseData && clinicalCaseData.presentacion) {
         res.json({ respuesta: clinicalCaseData.presentacion });
@@ -107,10 +97,8 @@ app.get("/api/caso", (req, res) => {
     }
 });
 
-
-// Nueva ruta para procesar preguntas del usuario y obtener respuestas de la IA
 app.post("/api/preguntar-caso", async (req, res) => {
-  const { pregunta, chatHistory } = req.body; // El frontend enviará el historial completo
+  const { pregunta, chatHistory } = req.body; 
 
   if (!pregunta || !chatHistory) {
     return res.status(400).json({ respuesta: "Pregunta y chatHistory son requeridos." });
@@ -121,7 +109,6 @@ app.post("/api/preguntar-caso", async (req, res) => {
   }
 
   try {
-    // Construir el prompt para Gemini con todo el contexto
     const geminiPrompt = `
       Eres un paciente en un simulador clínico llamado DxPro. Tu nombre es Juan, tienes 55 años y consultaste por dolor torácico.
       El estudiante te está haciendo preguntas.
@@ -142,7 +129,7 @@ app.post("/api/preguntar-caso", async (req, res) => {
       - Evita cualquier saludo o despedida al inicio o final de la respuesta.
     `;
 
-    const aiResponse = await callGeminiTextAPI(geminiPrompt, [], { temperature: 0.1 }); // Bajar temperatura para mayor precisión
+    const aiResponse = await callGeminiTextAPI(geminiPrompt, [], { temperature: 0.1 }); 
 
     res.json({ respuesta: aiResponse });
 
@@ -152,5 +139,4 @@ app.post("/api/preguntar-caso", async (req, res) => {
   }
 });
 
-// Iniciar el servidor
 app.listen(PORT, () => console.log(`✅ API lista en http://localhost:${PORT}`));
