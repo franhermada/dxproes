@@ -1,127 +1,95 @@
-import { useState, useEffect, useRef } from "react";
-import "./App.css"; 
-import "./index.css"; 
+import { useState, useEffect } from "react";
+import { motion, AnimatePresence } from "framer-motion";
+import "./App.css";
 
 export default function App() {
   const [messages, setMessages] = useState([]);
   const [input, setInput] = useState("");
-  const [isLoading, setIsLoading] = useState(false); 
-  const chatBoxRef = useRef(null); 
 
-  const API_URL = "https://dxproes-backend.onrender.com"; 
-
-  useEffect(() => {
-    const interval = setInterval(() => {
-      fetch(`${BACKEND_URL}/`) 
-        .then(() => console.log("✅ Ping enviado para mantener vivo el backend"))
-        .catch(() => console.log("⚠️ Error al hacer ping"));
-    }, 30000);
-
-    return () => clearInterval(interval);
-  }, []);
+  const API_URL = "https://dxproes-backend.onrender.com";
 
   // 🔹 Cargar presentación inicial del caso
   useEffect(() => {
     const obtenerCaso = async () => {
-      setIsLoading(true);
       try {
-        const res = await fetch(`${BACKEND_URL}/api/caso`);
+        const res = await fetch(`${API_URL}/api/caso`);
         const data = await res.json();
         setMessages([{ texto: data.respuesta, autor: "bot" }]);
       } catch (error) {
-        setMessages([{ texto: "⚠️ Error al cargar el caso clínico inicial", autor: "bot" }]);
-      } finally {
-        setIsLoading(false);
+        setMessages([{ texto: "⚠️ Error al cargar el caso clínico", autor: "bot" }]);
       }
     };
 
     obtenerCaso();
   }, []);
 
-  // 🔹 Scroll automático al final del chat cuando llegan nuevos mensajes
-  useEffect(() => {
-    if (chatBoxRef.current) {
-      chatBoxRef.current.scrollTop = chatBoxRef.current.scrollHeight;
-    }
-  }, [messages]);
-
-
-  // 🔹 Manejar envío de mensaje del usuario
+  // 🔹 Manejar envío de mensaje
   const handleSendMessage = async () => {
-    if (!input.trim() || isLoading) return; // No enviar mensajes vacíos o si ya está cargando
+    if (!input.trim()) return;
 
-    const userMessage = { texto: input.trim(), autor: "usuario" };
-    
-    // Crear el historial de chat que se enviará a Gemini.
-    // Solo necesitamos los campos `autor` y `texto` para el contexto.
-    const chatHistoryForGemini = messages.map(msg => ({
-      autor: msg.autor,
-      texto: msg.texto
-    }));
-
-    // Añadir el mensaje actual del usuario al historial para Gemini
-    chatHistoryForGemini.push({ autor: userMessage.autor, texto: userMessage.texto });
-
-
-    setMessages(prev => [...prev, userMessage]);
+    setMessages(prev => [...prev, { texto: input, autor: "usuario" }]);
     setInput("");
-    setIsLoading(true); // Activar estado de carga
 
     try {
-      const respuesta = await fetch(`${BACKEND_URL}/api/preguntar-caso`, { // Nueva ruta
+      const respuesta = await fetch(`${API_URL}/api/preguntar`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ pregunta: userMessage.texto, chatHistory: chatHistoryForGemini }),
+        body: JSON.stringify({ pregunta: input }),
       });
 
-      if (!respuesta.ok) {
-        const errorData = await respuesta.json();
-        throw new Error(errorData.respuesta || "Error desconocido del servidor");
-      }
+      if (!respuesta.ok) throw new Error("Servidor no disponible");
 
       const data = await respuesta.json();
-
       setMessages(prev => [...prev, { texto: data.respuesta, autor: "bot" }]);
     } catch (error) {
-      console.error("Error al enviar mensaje:", error);
-      setMessages(prev => [...prev, { texto: `⚠️ Error al conectar: ${error.message}`, autor: "bot" }]);
-    } finally {
-      setIsLoading(false); // Desactivar estado de carga
+      setMessages(prev => [
+        ...prev,
+        { texto: "⚠️ Error al conectar con el servidor. Reintentá en unos segundos.", autor: "bot" },
+      ]);
     }
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center w-full p-4">
-      <div className="bg-black/40 backdrop-blur-md rounded-xl shadow-lg w-full max-w-2xl p-6 flex flex-col chat-container">
+    <div
+      className="min-h-screen flex items-center justify-center"
+      style={{
+        backgroundImage: "url('/fondo.png')",
+        backgroundSize: "cover",
+        backgroundPosition: "center",
+      }}
+    >
+      <div className="bg-white/80 backdrop-blur-md rounded-xl shadow-lg w-full max-w-2xl p-6 flex flex-col">
         
         {/* Logo y título */}
-        <div className="flex flex-col items-center mb-4 header">
-          <img src="/DxPro.png" alt="DxPro Logo" className="logo w-24 h-24" />
-          <h1 className="text-2xl font-bold text-white title">BIENVENIDO A DXPRO</h1>
+        <div className="flex flex-col items-center mb-4">
+          <img src="/DxPro.png" alt="DxPro Logo" className="logo mb-2" />
+          <h1 className="text-2xl font-bold text-blue-900 text-center">BIENVENIDO A DXPRO</h1>
         </div>
 
         {/* Chat */}
-        <div ref={chatBoxRef} className="flex-1 overflow-y-auto space-y-3 mb-4 p-3 chat-box">
-          {messages.map((msg, i) => (
-            <div
-              key={i}
-              className={`message ${msg.autor} animate-fadeIn`}
-            >
-              {msg.texto}
-            </div>
-          ))}
-          {isLoading && (
-            <div className="message bot">
-              <div className="flex items-center">
-                <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-gray-600 mr-2"></div>
-                <span>Pensando...</span>
-              </div>
-            </div>
-          )}
+        <div className="flex-1 overflow-y-auto space-y-3 mb-4 p-3 border rounded bg-gray-50 flex flex-col">
+          <AnimatePresence>
+            {messages.map((msg, i) => (
+              <motion.div
+                key={i}
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -10 }}
+                transition={{ duration: 0.3 }}
+                className={`p-3 rounded-lg max-w-xs ${
+                  msg.autor === "usuario"
+                    ? "bg-blue-600 text-white self-end ml-auto"
+                    : "bg-gray-200 text-gray-800 self-start"
+                }`}
+              >
+                {msg.texto}
+              </motion.div>
+            ))}
+          </AnimatePresence>
         </div>
 
         {/* Input */}
-        <div className="flex gap-2 input-area">
+        <div className="flex gap-2">
           <input
             type="text"
             className="flex-1 p-2 border rounded"
@@ -129,14 +97,12 @@ export default function App() {
             value={input}
             onChange={(e) => setInput(e.target.value)}
             onKeyDown={(e) => e.key === "Enter" && handleSendMessage()}
-            disabled={isLoading} /* Deshabilitar input durante la carga */
           />
           <button
             onClick={handleSendMessage}
             className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700"
-            disabled={isLoading} /* Deshabilitar botón durante la carga */
           >
-            {isLoading ? 'Enviando...' : 'Enviar'}
+            Enviar
           </button>
         </div>
       </div>
