@@ -11,7 +11,7 @@
     },
     "Motivo de Consulta": {
       "variantes":["por qué viene","a que viene","que lo trae por acá"],
-      "respuesta":"Porque me duele el pecho."
+      "respuesta":"Vine porque me duele el pecho."
     },
     "inicio": {
       "variantes": ["cuando empezo", "desde cuando", "hace cuanto", "cuando arranco"],
