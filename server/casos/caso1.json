@@ -9,6 +9,10 @@
       "variantes": ["cuantos años tenes", "edad", "que edad tenes", "tu edad"],
       "respuesta": "Tengo 55 años."
     },
+    "Motivo de Consulta": {
+      "variantes":["por qué viene","a que viene","que lo trae por acá"],
+      "respuesta":"Porque me duele el pecho."
+    },
     "inicio": {
       "variantes": ["cuando empezo", "desde cuando", "hace cuanto", "cuando arranco"],
       "respuesta": "El dolor empezó hace 2 horas."
@@ -41,9 +45,13 @@
       "variantes": ["antecedentes", "tenes enfermedades", "alguna enfermedad", "sos hipertenso"],
       "respuesta": "Tengo hipertensión hace años y colesterol alto."
     },
-    "habitos": {
-      "variantes": ["fumas", "tabaco", "cigarro", "bebes", "alcohol"],
+    "habitos tabaquicos": {
+      "variantes": ["fumas", "tabaco", "cigarro"],
       "respuesta": "Fumo un atado por día desde hace 30 años."
+    },
+    "habitos alcohol": { 
+      "variantes":["bebes","alcohol","cerveza", "vino"],
+      "respuesta": "Una copita de vino con las comidas"
     },
     "actividad_fisica": {
       "variantes": ["haces ejercicio", "actividad fisica", "caminar", "gimnasio"],
