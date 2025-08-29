@@ -10,8 +10,8 @@
       "respuesta": "Tengo 55 años."
     },
     "Motivo de Consulta": {
-      "variantes":["por qué viene","a que viene","que lo trae por acá"],
-      "respuesta":"Vine porque me duele el pecho."
+      "variantes": ["por qué viene", "a que viene", "que lo trae por acá"],
+      "respuesta": "Vine porque me duele el pecho."
     },
     "inicio": {
       "variantes": ["cuando empezo", "desde cuando", "hace cuanto", "cuando arranco"],
@@ -50,8 +50,8 @@
       "respuesta": "Fumo un atado por día desde hace 30 años."
     },
     "habitos alcohol": { 
-      "variantes":["bebes","alcohol","cerveza", "vino"],
-      "respuesta": "Una copita de vino con las comidas"
+      "variantes": ["bebes", "alcohol", "cerveza", "vino"],
+      "respuesta": "Una copita de vino con las comidas."
     },
     "actividad_fisica": {
       "variantes": ["haces ejercicio", "actividad fisica", "caminar", "gimnasio"],
@@ -64,6 +64,40 @@
     "familiares": {
       "variantes": ["antecedentes familiares", "tu familia tuvo algo", "familia"],
       "respuesta": "Mi papá falleció de un infarto a los 60 años."
+    },
+
+    "--- EXAMEN FISICO ---": {},
+
+    "signos vitales": {
+      "variantes": ["signos vitales", "tension", "frecuencia cardiaca", "pulso", "presion"],
+      "respuesta": "TA 150/95 mmHg, FC 95 lpm, FR 22 rpm, SatO2 92%, Temp 37.2°C."
+    },
+    "examen cardiovascular": {
+      "variantes": ["corazon", "examen cardiaco", "auscultacion cardiaca"],
+      "respuesta": "Ritmo regular, sin soplos evidentes."
+    },
+    "examen respiratorio": {
+      "variantes": ["pulmones", "examen respiratorio", "auscultacion pulmonar"],
+      "respuesta": "Murmullo vesicular conservado, sin ruidos agregados."
+    },
+    "examen general": {
+      "variantes": ["estado general", "exploracion general", "aspecto"],
+      "respuesta": "Paciente ansioso, diaforético, consciente y orientado."
+    },
+
+    "--- ESTUDIOS COMPLEMENTARIOS ---": {},
+
+    "laboratorio": {
+      "variantes": ["analisis", "laboratorio", "analitica", "sangre"],
+      "respuesta": "Troponina ultrasensible elevada (0.8 ng/mL), colesterol total 250 mg/dL, glucemia 110 mg/dL."
+    },
+    "electrocardiograma": {
+      "variantes": ["ecg", "electro", "electrocardiograma"],
+      "respuesta": "ECG con supradesnivel del ST en derivaciones V2-V4."
+    },
+    "radiografia": {
+      "variantes": ["rx", "radiografia", "placa de torax"],
+      "respuesta": "Radiografía de tórax sin alteraciones significativas."
     }
   },
   "desconocido": "No entendí tu pregunta, ¿podés reformularla?"
