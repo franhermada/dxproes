@@ -8,12 +8,14 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 const app = express();
-const PORT = process.env.PORT || 10000;
+// Usa process.env.PORT en Render, o 10000 como fallback local
+const PORT = process.env.PORT || 10000; 
 
-// 🔹 Permitir frontend local + Netlify
+// 🔹 Permitir frontend local + Netlify + Render (ajusta estos orígenes según sea necesario)
 app.use(
   cors({
-    origin: ["http://localhost:5173", "https://dxproes.netlify.app"], // agrega tu dominio de Netlify
+    // Asegúrate de incluir la URL de tu frontend de Render/Netlify aquí
+    origin: ["http://localhost:5173", "https://dxproes.netlify.app", "https://tu-frontend-de-render.onrender.com"], 
   })
 );
 app.use(express.json());

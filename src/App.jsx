@@ -6,13 +6,16 @@ export default function App() {
   const [messages, setMessages] = useState([]);
   const [input, setInput] = useState("");
 
-  // URL del backend en Render
-  const BACKEND_URL = "https://dxproes-backend.onrender.com";
+  // 🔑 CAMBIO CLAVE AQUÍ: Determinar la URL del backend dinámicamente
+  // En desarrollo local (Vite), import.meta.env.VITE_BACKEND_URL se usará si está definido.
+  // Si no está definido (ej. en Render), se usará "https://dxproes-backend.onrender.com".
+  // ASEGÚRATE de que "https://dxproes-backend.onrender.com" sea la URL real de tu backend desplegado en Render.
+  const BACKEND_URL = import.meta.env.VITE_BACKEND_URL || "https://dxproes-backend.onrender.com";
 
   // 🔹 Mantener vivo el backend (ping cada 4 min aprox)
   useEffect(() => {
     const interval = setInterval(() => {
-      fetch(`${BACKEND_URL}/api/ping`)
+      fetch(`${BACKEND_URL}/`) // Ping a la raíz para mantenerlo activo
         .then(() => console.log("✅ Ping enviado para mantener vivo el backend"))
         .catch(() => console.log("⚠️ Error al hacer ping (pero no rompe)"));
     }, 240000); // 4 minutos
@@ -25,7 +28,7 @@ export default function App() {
     const obtenerCaso = async () => {
       try {
         const res = await fetch(`${BACKEND_URL}/api/caso`);
-        if (!res.ok) throw new Error(`Error HTTP: ${res.status}`);
+        if (!res.ok) throw new new Error(`Error HTTP: ${res.status}`);
         const data = await res.json();
         setMessages([{ texto: data.respuesta, autor: "bot" }]);
       } catch (error) {
@@ -52,7 +55,7 @@ export default function App() {
       });
 
       if (!respuesta.ok) {
-        throw new Error(`Error HTTP: ${respuesta.status}`);
+        throw new new Error(`Error HTTP: ${respuesta.status}`);
       }
 
       const data = await respuesta.json();
