@@ -8,10 +8,8 @@ export default function App() {
   const [isLoading, setIsLoading] = useState(false); 
   const chatBoxRef = useRef(null); 
 
-  
-  const BACKEND_URL = "http://localhost:5000"; 
+  const API_URL = "https://dxproes-backend.onrender.com"; 
 
-  
   useEffect(() => {
     const interval = setInterval(() => {
       fetch(`${BACKEND_URL}/`) 
