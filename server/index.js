@@ -13,18 +13,39 @@ const PORT = process.env.PORT || 5000;
 app.use(cors({ origin: "http://localhost:5173" }));
 app.use(express.json());
 
+
 let clinicalCaseData = null;
 
-const jsonFilePath = path.join(__dirname, 'casos', 'caso1.json');
+
+const jsonFilePath = path.join(__dirname, 'casos', 'caso1.json'); 
+
+// *** MEJORA DE DEPURACIÓN: MUESTRA LA RUTA COMPLETA EN LOS LOGS DEL SERVIDOR ***
+console.log(`[DEBUG] Intentando cargar el archivo JSON desde la ruta absoluta: ${jsonFilePath}`);
+console.log(`[DEBUG] Directorio actual de index.js (__dirname): ${__dirname}`);
+
 
 try {
+  // Verificamos si el archivo existe antes de intentar leerlo
+  if (!fs.existsSync(jsonFilePath)) {
+    throw new Error(`El archivo no existe en la ruta: ${jsonFilePath}`);
+  }
+
   const fileContent = fs.readFileSync(jsonFilePath, 'utf8');
   clinicalCaseData = JSON.parse(fileContent);
-  console.log('✅ Archivo caso1.json cargado exitosamente.');
+  console.log('✅ Archivo caso1.json cargado exitosamente desde la carpeta "casos".');
 } catch (error) {
-  console.error('❌ Error al cargar o parsear el archivo caso1.json:', error); 
+  console.error('❌ ERROR CRÍTICO: No se pudo cargar o parsear el archivo caso1.json.');
+  console.error('Por favor, verifica lo siguiente:');
+  console.error(`1. Que la carpeta 'casos' exista y contenga 'caso1.json' en la raíz de tu proyecto en GitHub.`);
+  console.error(`2. La sensibilidad a mayúsculas y minúsculas: 'casos' vs 'Casos'.`);
+  console.error(`3. Tu archivo .gitignore, que no esté excluyendo la carpeta 'casos'.`);
+  console.error(`Detalles del error: ${error.message}`);
+  // Si no se carga el caso, el servidor no puede funcionar.
+  // Podrías decidir salir del proceso: process.exit(1); 
+  // O como alternativa, enviar una respuesta de error más clara al frontend si es null.
 }
 
+// --- Funciones auxiliares para llamadas a la API de Gemini ---
 
 async function callGeminiTextAPI(prompt, chatHistory = [], generationConfig = {}) {
   const updatedChatHistory = [...chatHistory, { role: "user", parts: [{ text: prompt }] }];
@@ -84,19 +105,25 @@ async function callGeminiTextAPI(prompt, chatHistory = [], generationConfig = {}
   throw new Error("Fallo después de múltiples reintentos al llamar a la API de Gemini Text.");
 }
 
+// --- Rutas de la API ---
 
+// Ruta de Bienvenida
 app.get("/", (_req, res) => {
   res.send("DxPro API OK");
 });
 
+// Ruta para obtener la presentación inicial del caso
 app.get("/api/caso", (req, res) => {
     if (clinicalCaseData && clinicalCaseData.presentacion) {
         res.json({ respuesta: clinicalCaseData.presentacion });
     } else {
-        res.status(500).json({ respuesta: "Error: Caso clínico no cargado o sin presentación." });
+        // Mejor mensaje de error si el caso no se cargó
+        res.status(500).json({ respuesta: "Error del servidor: el caso clínico no se pudo cargar. Consulta los logs del backend para más detalles." });
     }
 });
 
+
+// Nueva ruta para procesar preguntas del usuario y obtener respuestas de la IA
 app.post("/api/preguntar-caso", async (req, res) => {
   const { pregunta, chatHistory } = req.body; 
 
@@ -105,7 +132,7 @@ app.post("/api/preguntar-caso", async (req, res) => {
   }
 
   if (!clinicalCaseData) {
-      return res.status(500).json({ respuesta: "Error: El caso clínico no se ha cargado en el servidor." });
+      return res.status(500).json({ respuesta: "Error del servidor: el caso clínico no está disponible. Consulta los logs del backend." });
   }
 
   try {
@@ -139,4 +166,5 @@ app.post("/api/preguntar-caso", async (req, res) => {
   }
 });
 
+// Iniciar el servidor
 app.listen(PORT, () => console.log(`✅ API lista en http://localhost:${PORT}`));
