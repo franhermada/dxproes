@@ -1,170 +1,93 @@
 import express from "express";
 import cors from "cors";
-import fs from 'fs';
-import path from 'path';
-import { fileURLToPath } from 'url';
+import fs from "fs";
+import path from "path";
+import { fileURLToPath } from "url";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 const app = express();
-const PORT = process.env.PORT || 5000;
+const PORT = process.env.PORT || 10000;
 
-app.use(cors({ origin: "http://localhost:5173" }));
+// 🔹 Permitir frontend local + Netlify
+app.use(
+  cors({
+    origin: ["http://localhost:5173", "https://dxproes.netlify.app"], // agrega tu dominio de Netlify
+  })
+);
 app.use(express.json());
 
-
+// --- Cargar el caso clínico ---
 let clinicalCaseData = null;
+const jsonFilePath = path.join(__dirname, "casos", "caso1.json");
 
-
-const jsonFilePath = path.join(__dirname, 'casos', 'caso1.json'); 
-
-// *** MEJORA DE DEPURACIÓN: MUESTRA LA RUTA COMPLETA EN LOS LOGS DEL SERVIDOR ***
-console.log(`[DEBUG] Intentando cargar el archivo JSON desde la ruta absoluta: ${jsonFilePath}`);
-console.log(`[DEBUG] Directorio actual de index.js (__dirname): ${__dirname}`);
-
+console.log(`[DEBUG] Intentando cargar el archivo JSON desde: ${jsonFilePath}`);
 
 try {
-  // Verificamos si el archivo existe antes de intentar leerlo
   if (!fs.existsSync(jsonFilePath)) {
-    throw new Error(`El archivo no existe en la ruta: ${jsonFilePath}`);
+    throw new Error(`El archivo no existe: ${jsonFilePath}`);
   }
 
-  const fileContent = fs.readFileSync(jsonFilePath, 'utf8');
+  const fileContent = fs.readFileSync(jsonFilePath, "utf8");
   clinicalCaseData = JSON.parse(fileContent);
-  console.log('✅ Archivo caso1.json cargado exitosamente desde la carpeta "casos".');
+  console.log("✅ Archivo caso1.json cargado exitosamente.");
 } catch (error) {
-  console.error('❌ ERROR CRÍTICO: No se pudo cargar o parsear el archivo caso1.json.');
-  console.error('Por favor, verifica lo siguiente:');
-  console.error(`1. Que la carpeta 'casos' exista y contenga 'caso1.json' en la raíz de tu proyecto en GitHub.`);
-  console.error(`2. La sensibilidad a mayúsculas y minúsculas: 'casos' vs 'Casos'.`);
-  console.error(`3. Tu archivo .gitignore, que no esté excluyendo la carpeta 'casos'.`);
-  console.error(`Detalles del error: ${error.message}`);
-  // Si no se carga el caso, el servidor no puede funcionar.
-  // Podrías decidir salir del proceso: process.exit(1); 
-  // O como alternativa, enviar una respuesta de error más clara al frontend si es null.
-}
-
-// --- Funciones auxiliares para llamadas a la API de Gemini ---
-
-async function callGeminiTextAPI(prompt, chatHistory = [], generationConfig = {}) {
-  const updatedChatHistory = [...chatHistory, { role: "user", parts: [{ text: prompt }] }];
-
-  const payload = {
-    contents: updatedChatHistory,
-    generationConfig: {
-      temperature: 0.2, 
-      maxOutputTokens: 500,
-      ...generationConfig
-    }
-  };
-
-  const apiKey = ""; 
-  const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-05-20:generateContent?key=${apiKey}`;
-
-  let retries = 0;
-  const maxRetries = 5;
-  const baseDelay = 1000; 
-
-  while (retries < maxRetries) {
-    try {
-      const response = await fetch(apiUrl, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(payload)
-      });
-
-      if (!response.ok) {
-        if (response.status === 429) { 
-          const delay = baseDelay * Math.pow(2, retries) + Math.random() * 100;
-          console.warn(`Demasiadas solicitudes a Gemini Text API. Reintentando en ${delay / 1000}ms...`);
-          await new Promise(resolve => setTimeout(resolve, delay));
-          retries++;
-          continue;
-        } else {
-          const errorText = await response.text();
-          throw new Error(`Error en la API de Gemini Text: ${response.status} - ${errorText}`);
-        }
-      }
-
-      const result = await response.json();
-      if (result.candidates && result.candidates.length > 0 &&
-          result.candidates[0].content && result.candidates[0].content.parts &&
-          result.candidates[0].content.parts.length > 0) {
-        return result.candidates[0].content.parts[0].text;
-      } else {
-        console.error('Estructura de respuesta inesperada de Gemini Text:', result);
-        throw new Error("No se pudo obtener una respuesta válida de la IA (texto).");
-      }
-
-    } catch (error) {
-      console.error('Error al llamar a la API de Gemini Text:', error);
-      throw error;
-    }
-  }
-  throw new Error("Fallo después de múltiples reintentos al llamar a la API de Gemini Text.");
+  console.error("❌ ERROR: No se pudo cargar caso1.json.");
+  console.error(error.message);
 }
 
 // --- Rutas de la API ---
-
-// Ruta de Bienvenida
+// Ruta de prueba
 app.get("/", (_req, res) => {
-  res.send("DxPro API OK");
+  res.send("✅ DxPro API corriendo en Render");
 });
 
-// Ruta para obtener la presentación inicial del caso
-app.get("/api/caso", (req, res) => {
-    if (clinicalCaseData && clinicalCaseData.presentacion) {
-        res.json({ respuesta: clinicalCaseData.presentacion });
-    } else {
-        // Mejor mensaje de error si el caso no se cargó
-        res.status(500).json({ respuesta: "Error del servidor: el caso clínico no se pudo cargar. Consulta los logs del backend para más detalles." });
+// 🔹 Presentación inicial del caso
+app.get("/api/caso", (_req, res) => {
+  if (clinicalCaseData && clinicalCaseData.presentacion) {
+    res.json({ respuesta: clinicalCaseData.presentacion });
+  } else {
+    res.status(500).json({
+      respuesta: "Error: el caso clínico no se pudo cargar.",
+    });
+  }
+});
+
+// 🔹 Preguntar al paciente (usa JSON local, no Gemini)
+app.post("/api/preguntar", (req, res) => {
+  const { pregunta } = req.body;
+
+  if (!pregunta) {
+    return res.status(400).json({ respuesta: "Debe enviar una pregunta." });
+  }
+
+  if (!clinicalCaseData || !clinicalCaseData.respuestas) {
+    return res.status(500).json({
+      respuesta: "Error: no hay datos del caso clínico disponibles.",
+    });
+  }
+
+  // 🔎 Buscar coincidencia en variantes
+  const lowerPregunta = pregunta.toLowerCase();
+  let respuestaEncontrada = null;
+
+  for (const clave in clinicalCaseData.respuestas) {
+    const { variantes, respuesta } = clinicalCaseData.respuestas[clave];
+    if (variantes.some((v) => lowerPregunta.includes(v))) {
+      respuestaEncontrada = respuesta;
+      break;
     }
-});
-
-
-// Nueva ruta para procesar preguntas del usuario y obtener respuestas de la IA
-app.post("/api/preguntar-caso", async (req, res) => {
-  const { pregunta, chatHistory } = req.body; 
-
-  if (!pregunta || !chatHistory) {
-    return res.status(400).json({ respuesta: "Pregunta y chatHistory son requeridos." });
   }
 
-  if (!clinicalCaseData) {
-      return res.status(500).json({ respuesta: "Error del servidor: el caso clínico no está disponible. Consulta los logs del backend." });
-  }
-
-  try {
-    const geminiPrompt = `
-      Eres un paciente en un simulador clínico llamado DxPro. Tu nombre es Juan, tienes 55 años y consultaste por dolor torácico.
-      El estudiante te está haciendo preguntas.
-      Tienes un caso clínico predefinido con la siguiente información:
-      ${JSON.stringify(clinicalCaseData.respuestas, null, 2)}
-
-      El historial completo de la conversación hasta ahora es:
-      ${chatHistory.map(msg => `${msg.autor === 'user' ? 'Estudiante' : 'Paciente'}: ${msg.texto}`).join('\n')}
-
-      La última pregunta del estudiante es: "${pregunta}"
-
-      Tu tarea es responder a la última pregunta del estudiante basándote *estrictamente* en la información proporcionada en el "clinicalCaseData.respuestas" y en tu rol de paciente.
-      - Si la pregunta del estudiante coincide con alguna de las "variantes" de las claves del caso, da la "respuesta" correspondiente.
-      - Si la pregunta no coincide con ninguna variante Y no puedes inferir una respuesta lógica directa de la información que tienes, responde exactamente: "${clinicalCaseData.desconocido}".
-      - Mantén el tono de paciente o de profesional de la salud según la pregunta, pero siempre conciso.
-      - No generes información nueva ni extiendas las respuestas más allá de lo estrictamente necesario.
-      - Si te preguntan por estudios que requieren imágenes (ECG, radiografía), NO generes la imagen aquí, solo da la respuesta textual del JSON.
-      - Evita cualquier saludo o despedida al inicio o final de la respuesta.
-    `;
-
-    const aiResponse = await callGeminiTextAPI(geminiPrompt, [], { temperature: 0.1 }); 
-
-    res.json({ respuesta: aiResponse });
-
-  } catch (error) {
-    console.error('Error en la ruta /api/preguntar-caso:', error);
-    res.status(500).json({ respuesta: `Error interno del servidor: ${error.message}` });
+  if (respuestaEncontrada) {
+    res.json({ respuesta: respuestaEncontrada });
+  } else {
+    res.json({ respuesta: clinicalCaseData.desconocido });
   }
 });
 
-// Iniciar el servidor
-app.listen(PORT, () => console.log(`✅ API lista en http://localhost:${PORT}`));
+// --- Iniciar servidor ---
+app.listen(PORT, () =>
+  console.log(`✅ API lista en http://localhost:${PORT}`)
+);
