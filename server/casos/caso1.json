@@ -1,12 +1,12 @@
 {
-  "presentacion": "Paciente masculino que consulta en guardia por dolor torácico.",
+  "presentacion": "Paciente masculino que consulta en guardia por dolor torácico. De aspecto ansioso, diaforético, consciente y orientado.",
   "respuestas": {
     "nombre": {
       "variantes": ["como te llamas", "nombre", "quien sos", "decime tu nombre"],
       "respuesta": "Me llamo Juan."
     },
     "edad": {
-      "variantes": ["cuantos años tenes", "edad", "que edad tenes", "tu edad"],
+      "variantes": ["cuantos años tenes", "que edad tenes", "tu edad"],
       "respuesta": "Tengo 55 años."
     },
     "Motivo de Consulta": {
@@ -80,11 +80,7 @@
       "variantes": ["pulmones", "examen respiratorio", "auscultacion pulmonar"],
       "respuesta": "Murmullo vesicular conservado, sin ruidos agregados."
     },
-    "examen general": {
-      "variantes": ["estado general", "exploracion general", "aspecto"],
-      "respuesta": "Paciente ansioso, diaforético, consciente y orientado."
-    },
-
+  
     "--- ESTUDIOS COMPLEMENTARIOS ---": {},
 
     "laboratorio": {
