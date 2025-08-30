@@ -1,5 +1,5 @@
 {
-  "presentacion": "Paciente masculino que consulta en guardia por dolor torácico. De aspecto ansioso, diaforético, consciente y orientado.",
+  "presentacion": "Paciente masculino que consulta en guardia por dolor torácico.",
   "respuestas": {
     "nombre": {
       "variantes": ["como te llamas", "nombre", "quien sos", "decime tu nombre"],
@@ -19,7 +19,7 @@
     },
     "localizacion": {
       "variantes": ["donde te duele", "ubicacion del dolor", "en que parte", "donde lo sentis"],
-      "respuesta": "Lo siento en el pecho, en el medio."
+      "respuesta": "Lo siento en el medio, en la boca del estomago."
     },
     "irradiacion": {
       "variantes": ["se te va para algun lado", "se corre", "irradia", "va para otro lado"],
@@ -67,7 +67,10 @@
     },
 
     "--- EXAMEN FISICO ---": {},
-
+    "inspección general":{
+      "variantes":["aspecto fisico", "inspección visual"],
+      "respuesta": " De aspecto ansioso, diaforético, consciente y orientado."
+    },
     "signos vitales": {
       "variantes": ["signos vitales", "tension", "frecuencia cardiaca", "pulso", "presion"],
       "respuesta": "TA 150/95 mmHg, FC 95 lpm, FR 22 rpm, SatO2 92%, Temp 37.2°C."
