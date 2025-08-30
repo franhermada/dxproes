@@ -8,14 +8,13 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 const app = express();
-// Usa process.env.PORT en Render, o 10000 como fallback local
+
 const PORT = process.env.PORT || 10000; 
 
-// 🔹 Permitir frontend local + Netlify + Render (ajusta estos orígenes según sea necesario)
 app.use(
   cors({
-    // Asegúrate de incluir la URL de tu frontend de Render/Netlify aquí
-    origin: ["http://localhost:5173", "https://dxproes.netlify.app", "https://tu-frontend-de-render.onrender.com"], 
+    
+    origin: ["http://localhost:5173", "https://dxproes.netlify.app", "https://dxproes-backend.onrender.com/api/caso"], 
   })
 );
 app.use(express.json());
@@ -39,13 +38,10 @@ try {
   console.error(error.message);
 }
 
-// --- Rutas de la API ---
-// Ruta de prueba
 app.get("/", (_req, res) => {
   res.send("✅ DxPro API corriendo en Render");
 });
 
-// 🔹 Presentación inicial del caso
 app.get("/api/caso", (_req, res) => {
   if (clinicalCaseData && clinicalCaseData.presentacion) {
     res.json({ respuesta: clinicalCaseData.presentacion });
@@ -56,7 +52,7 @@ app.get("/api/caso", (_req, res) => {
   }
 });
 
-// 🔹 Preguntar al paciente (usa JSON local, no Gemini)
+
 app.post("/api/preguntar", (req, res) => {
   const { pregunta } = req.body;
 
@@ -70,7 +66,7 @@ app.post("/api/preguntar", (req, res) => {
     });
   }
 
-  // 🔎 Buscar coincidencia en variantes
+
   const lowerPregunta = pregunta.toLowerCase();
   let respuestaEncontrada = null;
 
@@ -89,7 +85,6 @@ app.post("/api/preguntar", (req, res) => {
   }
 });
 
-// --- Iniciar servidor ---
 app.listen(PORT, () =>
   console.log(`✅ API lista en http://localhost:${PORT}`)
 );
