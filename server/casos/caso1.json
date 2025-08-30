@@ -22,7 +22,7 @@
       "respuesta": "Lo siento en el medio, en la boca del estomago."
     },
     "irradiacion": {
-      "variantes": ["se te va para algun lado", "se corre", "irradia", "va para otro lado"],
+      "variantes": ["se va para algun lado", "se corre", "irradia", "va para otro lado"],
       "respuesta": "Sí, se me va hacia el brazo izquierdo."
     },
     "caracteristicas": {
