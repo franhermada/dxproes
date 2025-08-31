@@ -1,50 +1,23 @@
-/* src/App.css */
-
-/* Estilos de burbujas de chat y scrollbar */
-
-/* Burbujas de chat ya se aplican vía Tailwind en App.jsx */
-
-/* Estilo para la barra de desplazamiento personalizada (Webkit - Chrome, Safari) */
-.custom-scrollbar::-webkit-scrollbar {
-  width: 8px; /* Ancho de la barra de desplazamiento */
+.chat-box::-webkit-scrollbar {
+  width: 8px;
 }
 
-.custom-scrollbar::-webkit-scrollbar-track {
-  background: #f1f1f1; /* Color del fondo del track */
+.chat-box::-webkit-scrollbar-track {
+  background: #e2e8f0;
   border-radius: 10px;
 }
 
-.custom-scrollbar::-webkit-scrollbar-thumb {
-  background: #888; /* Color del "pulgar" (el control de arrastre) */
+.chat-box::-webkit-scrollbar-thumb {
+  background: #94a3b8;
   border-radius: 10px;
 }
 
-.custom-scrollbar::-webkit-scrollbar-thumb:hover {
-  background: #555; /* Color del pulgar al pasar el ratón */
+.chat-box::-webkit-scrollbar-thumb:hover {
+  background: #64748b;
 }
 
-/* Opcional: Estilo para Firefox */
-.custom-scrollbar {
-  scrollbar-width: thin; /* "auto" o "none" */
-  scrollbar-color: #888 #f1f1f1; /* color del pulgar y color del track */
+/* Opcional: para Firefox */
+.chat-box {
+  scrollbar-width: thin;
+  scrollbar-color: #94a3b8 #e2e8f0;
 }
-
-/* Puedes añadir más estilos base aquí si no están en index.css o Tailwind */
-body {
-  margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
-    sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  background-color: #f0f2f5; /* Un fondo suave para toda la página */
-}
-
-code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
-    monospace;
-}
-
-/* Asegúrate de que tu imagen de fondo si la tienes, no interfiera con el navbar */
-/* Por ejemplo, si tienes un background-image en body, asegúrate de que el navbar
-   tenga un color de fondo sólido */
