@@ -1,13 +1,7 @@
-/* Si usás Tailwind, mantené las directivas:
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
-*/
 
-/* Fondo */
-html, body, #root {
-  height: 100%;
-}
 body {
   margin: 0;
   background-image: url('/fondo.png');
