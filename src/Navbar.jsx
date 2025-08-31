@@ -7,7 +7,8 @@ export default function Navbar() {
           <a href="#inicio" className="text-white hover:text-blue-200">Inicio</a>
           <a href="#tutorial" className="text-white hover:text-blue-200">Tutorial</a>
           <a href="#casos-basicos" className="text-white hover:text-blue-200">Casos Básicos</a>
-          <a href="#casos-avanzados" className="text-white hover:text-blue-200">Casos Avanzados</a>
+          <a href="#casos-complejos" className="text-white hover:text-blue-200">Casos Avanzados</a>
+          <a href="#sobre-dxpro" className="text-white hover:text-blue-200">Sobre DxPro</a>
           <a href="#contacto" className="text-white hover:text-blue-200">Contacto</a>
         </div>
       </div>

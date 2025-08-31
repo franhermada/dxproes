@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef } from "react";
 import "./App.css";
 import "./index.css";
+import Navbar from "./Navbar"; 
 
 export default function App() {
   const [messages, setMessages] = useState([]);
@@ -9,9 +10,8 @@ export default function App() {
 
   const BACKEND_URL = "https://dxproes-backend.onrender.com";
 
-  // Scroll automático instantáneo al final
   useEffect(() => {
-    chatEndRef.current?.scrollIntoView({ behavior: "instant" });
+    chatEndRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages]);
 
   useEffect(() => {
@@ -48,43 +48,45 @@ export default function App() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center w-full">
-      <div className="chat-card w-full max-w-2xl p-6 flex flex-col">
-        
-        {/* Logo y título */}
-        <div className="flex flex-col items-center mb-4">
-          <img src="/DxPro.png" alt="DxPro Logo" className="logo-small" />
-          <h1 className="text-2xl font-bold text-blue-900">BIENVENIDO A DXPRO</h1>
-        </div>
-
-        {/* Chat */}
-        <div className="chat-box space-y-3 mb-4 p-3">
-          {messages.map((msg, i) => (
-            <div key={i} className={`message ${msg.autor}`}>
-              {msg.texto}
-            </div>
-          ))}
-          <div ref={chatEndRef} />
-        </div>
-
-        {/* Input */}
-        <div className="flex gap-2">
-          <input
-            type="text"
-            className="flex-1 p-2 border rounded"
-            placeholder="Escribe tu pregunta al paciente..."
-            value={input}
-            onChange={(e) => setInput(e.target.value)}
-            onKeyDown={(e) => e.key === "Enter" && handleSendMessage()}
-          />
-          <button
-            onClick={handleSendMessage}
-            className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700"
-          >
-            Enviar
-          </button>
+    <>
+      <Navbar /> {/* Renderizamos el Navbar aquí */}
+      <div className="main-content-container"> {/* Nuevo contenedor para centrar todo el contenido */}
+        <div className="chat-card w-full max-w-2xl p-6 flex flex-col">
+          {/* Logo y título */}
+          <div className="flex flex-col items-center mb-4">
+            <img src="/DxPro.png" alt="DxPro Logo" className="logo-small" />
+            <h1 className="text-2xl font-bold text-blue-900">BIENVENIDO A DXPRO</h1>
+          </div>
+  
+          {/* Chat */}
+          <div className="chat-box space-y-3 mb-4 p-3">
+            {messages.map((msg, i) => (
+              <div key={i} className={`message ${msg.autor}`}>
+                {msg.texto}
+              </div>
+            ))}
+            <div ref={chatEndRef} />
+          </div>
+  
+          {/* Input */}
+          <div className="flex gap-2">
+            <input
+              type="text"
+              className="flex-1 p-2 border rounded"
+              placeholder="Escribe tu pregunta al paciente..."
+              value={input}
+              onChange={(e) => setInput(e.target.value)}
+              onKeyDown={(e) => e.key === "Enter" && handleSendMessage()}
+            />
+            <button
+              onClick={handleSendMessage}
+              className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700"
+            >
+              Enviar
+            </button>
+          </div>
         </div>
       </div>
-    </div>
+    </>
   );
 }

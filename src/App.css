@@ -18,6 +18,17 @@ html, body, #root {
   object-fit: contain;
 }
 
+.main-content-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  min-height: 100vh;
+  padding-top: 56px; 
+  box-sizing: border-box; 
+}
+
 /* Caja del chat */
 .chat-box {
   max-height: 60vh;
