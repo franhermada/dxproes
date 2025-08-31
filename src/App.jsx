@@ -1,22 +1,20 @@
 import { useState, useEffect, useRef } from "react";
-import Navbar from "./Navbar";
 import "./App.css";
+import "./index.css";
 
 export default function App() {
   const [messages, setMessages] = useState([]);
   const [input, setInput] = useState("");
-  const chatBoxRef = useRef(null);
+  const chatEndRef = useRef(null);
 
   const BACKEND_URL = "https://dxproes-backend.onrender.com";
 
-  // Efecto para scroll automático al final del chat
+  // Scroll automático hacia abajo (instantáneo)
   useEffect(() => {
-    if (chatBoxRef.current) {
-      chatBoxRef.current.scrollTop = chatBoxRef.current.scrollHeight;
-    }
+    chatEndRef.current?.scrollIntoView({ behavior: "instant" });
   }, [messages]);
 
-  // Cargar presentación inicial del caso
+  // Presentación inicial
   useEffect(() => {
     const obtenerCaso = async () => {
       try {
@@ -30,8 +28,10 @@ export default function App() {
     obtenerCaso();
   }, []);
 
+  // Enviar mensaje
   const handleSendMessage = async () => {
     if (!input.trim()) return;
+
     setMessages(prev => [...prev, { texto: input, autor: "usuario" }]);
     setInput("");
 
@@ -41,6 +41,7 @@ export default function App() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ pregunta: input }),
       });
+
       const data = await respuesta.json();
       setMessages(prev => [...prev, { texto: data.respuesta, autor: "bot" }]);
     } catch (error) {
@@ -49,47 +50,38 @@ export default function App() {
   };
 
   return (
-    <>
-      <Navbar /> {/* Renderiza el navbar en la parte superior */}
-      <div className="flex justify-center items-center min-h-screen pt-16 px-4 pb-4">
-        <div className="w-full max-w-2xl bg-white rounded-xl shadow-lg p-6 flex flex-col" style={{ minHeight: '80vh', maxHeight: '90vh' }}>
-          
-          {/* Logo y título */}
-          <div className="flex flex-col items-center mb-4">
-            <img src="/DxPro.png" alt="DxPro Logo" className="w-24 h-24 mb-2" />
-            <h1 className="text-3xl font-bold text-gray-800">BIENVENIDO A DXPRO</h1>
-          </div>
-  
-          {/* Área del Chat con scroll automático */}
-          <div ref={chatBoxRef} className="flex-1 overflow-y-auto space-y-4 p-4 rounded-lg bg-gray-50 border border-gray-200">
+    <div className="app-container">
+      {/* NAVBAR */}
+      <nav className="navbar">
+        <img src="/DxPro.png" alt="DxPro Logo" className="logo-navbar" />
+        <h1 className="navbar-title">DxPro - Simulador Clínico</h1>
+      </nav>
+
+      {/* CHAT */}
+      <div className="chat-wrapper">
+        <div className="chat-card">
+          <div className="chat-box">
             {messages.map((msg, i) => (
-              <div key={i} className={`flex ${msg.autor === 'usuario' ? 'justify-end' : 'justify-start'}`}>
-                <div className={`max-w-[75%] px-4 py-2 rounded-xl shadow-md text-white ${msg.autor === 'usuario' ? 'bg-blue-500 rounded-br-none' : 'bg-gray-700 text-white rounded-bl-none'}`}>
-                  {msg.texto}
-                </div>
+              <div key={i} className={`message ${msg.autor}`}>
+                {msg.texto}
               </div>
             ))}
+            <div ref={chatEndRef} />
           </div>
-  
+
           {/* Input */}
-          <div className="flex gap-2 mt-4">
+          <div className="input-area">
             <input
               type="text"
-              className="flex-1 p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
               placeholder="Escribe tu pregunta al paciente..."
               value={input}
               onChange={(e) => setInput(e.target.value)}
               onKeyDown={(e) => e.key === "Enter" && handleSendMessage()}
             />
-            <button
-              onClick={handleSendMessage}
-              className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700"
-            >
-              Enviar
-            </button>
+            <button onClick={handleSendMessage}>Enviar</button>
           </div>
         </div>
       </div>
-    </>
+    </div>
   );
 }
