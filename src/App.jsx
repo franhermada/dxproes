@@ -8,15 +8,12 @@ export default function App() {
 
   const BACKEND_URL = import.meta.env.VITE_BACKEND_URL || "https://dxproes-backend.onrender.com";
 
-    // 🔹 referencia para el scroll
   const chatEndRef = useRef(null);
 
-  // 🔹 función para hacer scroll al final
   const scrollToBottom = () => {
     chatEndRef.current?.scrollIntoView({ behavior: "smooth" });
   };
 
-  // 🔹 cada vez que cambien los mensajes, baja al final
   useEffect(() => {
     scrollToBottom();
   }, [messages]);
