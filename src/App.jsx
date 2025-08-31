@@ -1,51 +1,50 @@
 import { useState, useEffect, useRef } from "react";
+import Navbar from "./components/Navbar";
 import "./App.css";
 import "./index.css";
-import Navbar from "./components/Navbar";
 
 export default function App() {
   const [messages, setMessages] = useState([]);
   const [input, setInput] = useState("");
-  const BACKEND_URL = "https://dxproes-backend.onrender.com";
   const chatEndRef = useRef(null);
-  
-  const scrollToBottom = () => {
-    chatEndRef.current?.scrollIntoView({ behavior: "auto" }); // instantáneo
-  };
 
-  useEffect(() => {
-    scrollToBottom();
-  }, [messages]);
+  const BACKEND_URL = "https://dxproes-backend.onrender.com";
 
-  // Ping backend
+  // 🔹 Mantener backend vivo (ping cada 4 min)
   useEffect(() => {
     const interval = setInterval(() => {
-      fetch(`${BACKEND_URL}/api/ping`).catch(() =>
-        console.log("⚠️ Error al hacer ping")
-      );
-    }, 30000);
+      fetch(`${BACKEND_URL}/api/ping`)
+        .then(() => console.log("✅ Ping enviado para mantener vivo el backend"))
+        .catch(() => console.log("⚠️ Error al hacer ping"));
+    }, 240000);
+
     return () => clearInterval(interval);
   }, []);
 
-  // Caso inicial
+  // 🔹 Cargar presentación inicial
   useEffect(() => {
     const obtenerCaso = async () => {
       try {
         const res = await fetch(`${BACKEND_URL}/api/caso`);
         const data = await res.json();
         setMessages([{ texto: data.respuesta, autor: "bot" }]);
-      } catch {
-        setMessages([
-          { texto: "⚠️ Error al cargar el caso clínico", autor: "bot" },
-        ]);
+      } catch (error) {
+        setMessages([{ texto: "⚠️ Error al cargar el caso clínico", autor: "bot" }]);
       }
     };
+
     obtenerCaso();
   }, []);
 
-  // Enviar mensaje
+  // 🔹 Scroll automático al final
+  useEffect(() => {
+    chatEndRef.current?.scrollIntoView({ behavior: "instant" });
+  }, [messages]);
+
+  // 🔹 Enviar mensaje
   const handleSendMessage = async () => {
     if (!input.trim()) return;
+
     setMessages((prev) => [...prev, { texto: input, autor: "usuario" }]);
     setInput("");
 
@@ -55,9 +54,10 @@ export default function App() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ pregunta: input }),
       });
+
       const data = await respuesta.json();
       setMessages((prev) => [...prev, { texto: data.respuesta, autor: "bot" }]);
-    } catch {
+    } catch (error) {
       setMessages((prev) => [
         ...prev,
         { texto: "⚠️ Error al conectar con el servidor", autor: "bot" },
@@ -66,30 +66,17 @@ export default function App() {
   };
 
   return (
-    <div className="min-h-screen flex flex-col">
-      {/* Navbar fija arriba */}
-      <nav className="bg-black text-white py-4 px-8 flex justify-between items-center fixed w-full top-0 z-50">
-        <div className="font-bold text-lg">DxPro</div>
-        <div className="flex gap-8 font-semibold">
-          <a href="#inicio" className="hover:text-blue-400">INICIO</a>
-          <a href="#tutorial" className="hover:text-blue-400">TUTORIAL</a>
-          <a href="#basicos" className="hover:text-blue-400">CASOS BÁSICOS</a>
-          <a href="#avanzados" className="hover:text-blue-400">CASOS AVANZADOS</a>
-          <a href="#contacto" className="hover:text-blue-400">CONTACTO</a>
-        </div>
-      </nav>
+    <div className="min-h-screen w-full bg-cover bg-center">
+      {/* 🔹 Navbar */}
+      <Navbar />
 
-      {/* Fondo con imagen */}
-      <div
-        className="flex-1 flex items-center justify-center bg-cover bg-center"
-        style={{ backgroundImage: "url('/fondo.jpg')" }} // 👈 guarda tu imagen en public/fondo.jpg
-      >
-        {/* Contenedor del chat */}
-        <div className="bg-black/60 backdrop-blur-md rounded-xl shadow-lg w-full max-w-2xl p-6 flex flex-col chat-container mt-24">
-          {/* Logo y título */}
+      {/* 🔹 Sección del Chat */}
+      <div id="chat" className="flex items-center justify-center w-full pt-28">
+        <div className="bg-white/80 backdrop-blur-md rounded-xl shadow-lg w-full max-w-4xl p-6 flex flex-col chat-container">
+          {/* Logo + título */}
           <div className="flex flex-col items-center mb-4 header">
-            <img src="/DxPro.png" alt="DxPro Logo" className="logo w-20 h-20" />
-            <h1 className="text-2xl font-bold text-white title">
+            <img src="/DxPro.png" alt="DxPro Logo" className="w-20 h-20 mb-2" />
+            <h1 className="text-2xl font-bold text-blue-900">
               BIENVENIDO A DXPRO
             </h1>
           </div>
@@ -125,6 +112,27 @@ export default function App() {
             </button>
           </div>
         </div>
+      </div>
+
+      {/* 🔹 Sección Tutorial */}
+      <div id="tutorial" className="p-10 text-center text-gray-800">
+        <h2 className="text-3xl font-bold mb-4 text-blue-800">Tutorial</h2>
+        <p className="text-lg max-w-3xl mx-auto">
+          Aquí irán los pasos explicativos para que el estudiante aprenda cómo
+          interactuar con el paciente virtual. Explicá cómo iniciar la anamnesis,
+          qué tipo de preguntas hacer y cómo interpretar las respuestas.
+        </p>
+      </div>
+
+      {/* 🔹 Sección Inicio */}
+      <div id="about" className="p-10 text-center text-gray-800 bg-blue-50">
+        <h2 className="text-3xl font-bold mb-4 text-blue-800">Sobre DxPro</h2>
+        <p className="text-lg max-w-3xl mx-auto">
+          Bienvenidos a DxPro, un simulador virtual de casos clínicos donde podrás desarrollar tus habilidades clinicomédicas. 
+          La idea surge como parte de un proyecto de investigación sobre el uso de herramientas digitales (como IA) 
+          en el desarrollo académico de estudiantes de Medicina y Enfermería, en la Facultad de Ciencias de la Salud 
+          perteneciente a la Universidad Nacional del Centro de la Provincia de Buenos Aires.
+        </p>
       </div>
     </div>
   );
