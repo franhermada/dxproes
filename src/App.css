@@ -1,23 +1,36 @@
-/* Fondo hospitalario (se define en index.css) y reset de enlaces del navbar */
-nav a {
-  text-decoration: none;
+/* Fondo */
+html, body, #root {
+  height: 100%;
+}
+body {
+  margin: 0;
+  background-image: url('/fondo.png');
+  background-size: cover;
+  background-position: center;
+  background-attachment: fixed;
+  font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, Ubuntu, Cantarell, "Helvetica Neue", Arial, "Noto Sans", sans-serif;
 }
 
 /* Tarjeta del chat */
 .chat-card {
-  box-shadow: 0 10px 30px rgba(0, 0, 0, .35);
+  background: rgba(255, 255, 255, 0.92);
+  backdrop-filter: blur(12px);
+  border-radius: 1rem;
+  box-shadow: 0 10px 35px rgba(0,0,0,0.35);
 }
 
-/* Logo forzado chico (evita que cualquier .logo previo lo agrande) */
+/* Logo forzado pequeño */
 .logo-small {
-  width: 96px;
-  height: 96px;
+  width: 90px;
+  height: 90px;
   object-fit: contain;
 }
 
-/* Caja de mensajes: altura controlada para que no crezca infinito */
+/* Caja del chat */
 .chat-box {
   max-height: 60vh;
+  overflow-y: auto;
+  padding-right: 4px;
 }
 
 /* Burbujas */
@@ -32,14 +45,14 @@ nav a {
 
 .message.usuario {
   margin-left: auto;
-  background: #2563eb;         /* azul 600 */
+  background: #2563eb; /* azul */
   color: #fff;
   border-top-right-radius: 4px;
 }
 
 .message.bot {
   margin-right: auto;
-  background: #e5e7eb;         /* gray-200 */
-  color: #111827;              /* gray-900 */
+  background: #e5e7eb; /* gris claro */
+  color: #111827;
   border-top-left-radius: 4px;
 }
