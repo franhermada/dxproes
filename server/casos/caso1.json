@@ -9,7 +9,7 @@
       "variantes": ["cuantos años tenes", "que edad tenes", "tu edad"],
       "respuesta": "Tengo 55 años."
     },
-    "Motivo de Consulta": {
+    "motivo_consulta": {
       "variantes": ["por qué viene", "a que viene", "que lo trae por acá","por que venis"],
       "respuesta": "Vine porque me duele el pecho."
     },
@@ -45,11 +45,11 @@
       "variantes": ["antecedentes", "tenes enfermedades", "alguna enfermedad", "sos hipertenso"],
       "respuesta": "Tengo hipertensión hace años y colesterol alto."
     },
-    "habitos tabaquicos": {
+    "habitos_tabaquicos": {
       "variantes": ["fumas", "tabaco", "cigarro"],
       "respuesta": "Fumo un atado por día desde hace 30 años."
     },
-    "habitos alcohol": { 
+    "habitos_alcohol": { 
       "variantes": ["bebes", "alcohol", "cerveza", "vino"],
       "respuesta": "Una copita de vino con las comidas."
     },
@@ -58,7 +58,7 @@
       "respuesta": "No hago ejercicio, soy bastante sedentario."
     },
     "medicacion": {
-      "variantes": ["tomás medicación", "que remedios tomas", "medicamentos"],
+      "variantes": ["tomas medicación", "que remedios tomas", "medicamentos"],
       "respuesta": "Tomo enalapril para la presión."
     },
     "familiares": {
@@ -66,25 +66,22 @@
       "respuesta": "Mi papá falleció de un infarto a los 60 años."
     },
 
-    "--- EXAMEN FISICO ---": {},
-    "inspección general":{
-      "variantes":["aspecto fisico", "inspección visual"],
-      "respuesta": " De aspecto ansioso, diaforético, consciente y orientado."
+    "inspeccion_general": {
+      "variantes": ["aspecto fisico", "inspeccion visual", "como se ve", "estado general", "como lo ves", "exploracion general"],
+      "respuesta": "De aspecto ansioso, diaforético, consciente y orientado."
     },
-    "signos vitales": {
-      "variantes": ["signos vitales", "tension", "frecuencia cardiaca", "pulso", "presion"],
+    "signos_vitales": {
+      "variantes": ["signos vitales", "tension", "frecuencia cardiaca", "pulso", "presion", "fc", "fr", "ta", "saturacion", "temperatura"],
       "respuesta": "TA 150/95 mmHg, FC 95 lpm, FR 22 rpm, SatO2 92%, Temp 37.2°C."
     },
-    "examen cardiovascular": {
-      "variantes": ["corazon", "examen cardiaco", "auscultacion cardiaca"],
+    "examen_cardiovascular": {
+      "variantes": ["corazon", "examen cardiaco", "auscultacion cardiaca", "latidos"],
       "respuesta": "Ritmo regular, sin soplos evidentes."
     },
-    "examen respiratorio": {
-      "variantes": ["pulmones", "examen respiratorio", "auscultacion pulmonar"],
+    "examen_respiratorio": {
+      "variantes": ["pulmones", "examen respiratorio", "auscultacion pulmonar", "respiracion"],
       "respuesta": "Murmullo vesicular conservado, sin ruidos agregados."
     },
-  
-    "--- ESTUDIOS COMPLEMENTARIOS ---": {},
 
     "laboratorio": {
       "variantes": ["analisis", "laboratorio", "analitica", "sangre"],
