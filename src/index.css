@@ -1,14 +1,18 @@
+/* Si usás Tailwind, mantené las directivas:
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+*/
 
-/* Estilos de fondo globales */
+/* Fondo */
+html, body, #root {
+  height: 100%;
+}
 body {
   margin: 0;
-  font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Ubuntu, Cantarell, "Helvetica Neue", Arial, "Noto Sans", "Apple Color Emoji", "Segoe UI Emoji";
-  background-image: url('/fondo.png'); /* Asegúrate de que esta ruta sea correcta */
+  background-image: url('/fondo.png');
   background-size: cover;
   background-position: center;
   background-attachment: fixed;
-  min-height: 100vh;
+  font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Ubuntu, Cantarell, "Helvetica Neue", Arial, "Noto Sans", "Apple Color Emoji", "Segoe UI Emoji";
 }
