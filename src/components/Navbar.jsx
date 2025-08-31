@@ -1,13 +1,18 @@
 export default function Navbar() {
   return (
-    <nav className="bg-black/90 text-white py-4 px-8 flex justify-between items-center fixed w-full top-0 z-50 shadow-md">
-      <div className="font-bold text-xl tracking-wide">DxPro</div>
-      <div className="flex gap-8 text-lg font-medium">
-        <a href="#inicio" className="hover:text-blue-400 transition">INICIO</a>
-        <a href="#tutorial" className="hover:text-blue-400 transition">TUTORIAL</a>
-        <a href="#basicos" className="hover:text-blue-400 transition">CASOS BÁSICOS</a>
-        <a href="#avanzados" className="hover:text-blue-400 transition">CASOS AVANZADOS</a>
-        <a href="#contacto" className="hover:text-blue-400 transition">CONTACTO</a>
+    <nav className="fixed top-0 left-0 w-full bg-blue-900 text-white shadow-md z-50">
+      <div className="max-w-6xl mx-auto px-6 py-4 flex justify-between items-center">
+        {}
+        <div className="text-xl font-bold tracking-wide">DxPro</div>
+
+        {}
+        <div className="flex gap-6 text-lg font-medium">
+          <a href="#inicio" className="hover:text-blue-300 transition">Inicio</a>
+          <a href="#tutorial" className="hover:text-blue-300 transition">Tutorial</a>
+          <a href="#casos-basicos" className="hover:text-blue-300 transition">Casos Básicos</a>
+          <a href="#casos-avanzados" className="hover:text-blue-300 transition">Casos Avanzados</a>
+          <a href="#contacto" className="hover:text-blue-300 transition">Contacto</a>
+        </div>
       </div>
     </nav>
   );

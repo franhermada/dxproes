@@ -10,18 +10,17 @@ export default function App() {
 
   const BACKEND_URL = "https://dxproes-backend.onrender.com";
 
-  // 🔹 Mantener backend vivo (ping cada 4 min)
+  // Mantener backend vivo
   useEffect(() => {
     const interval = setInterval(() => {
       fetch(`${BACKEND_URL}/api/ping`)
-        .then(() => console.log("✅ Ping enviado para mantener vivo el backend"))
+        .then(() => console.log("✅ Ping enviado"))
         .catch(() => console.log("⚠️ Error al hacer ping"));
     }, 240000);
-
     return () => clearInterval(interval);
   }, []);
 
-  // 🔹 Cargar presentación inicial
+  // Presentación inicial
   useEffect(() => {
     const obtenerCaso = async () => {
       try {
@@ -32,19 +31,17 @@ export default function App() {
         setMessages([{ texto: "⚠️ Error al cargar el caso clínico", autor: "bot" }]);
       }
     };
-
     obtenerCaso();
   }, []);
 
-  // 🔹 Scroll automático al final
+  // Scroll automático
   useEffect(() => {
     chatEndRef.current?.scrollIntoView({ behavior: "instant" });
   }, [messages]);
 
-  // 🔹 Enviar mensaje
+  // Enviar mensaje
   const handleSendMessage = async () => {
     if (!input.trim()) return;
-
     setMessages((prev) => [...prev, { texto: input, autor: "usuario" }]);
     setInput("");
 
@@ -67,15 +64,15 @@ export default function App() {
 
   return (
     <div className="min-h-screen w-full bg-cover bg-center">
-      {/* 🔹 Navbar */}
+      {/* Navbar */}
       <Navbar />
 
-      {/* 🔹 Sección del Chat */}
+      {/* Chat centrado */}
       <div id="chat" className="flex items-center justify-center w-full pt-28">
-        <div className="bg-white/80 backdrop-blur-md rounded-xl shadow-lg w-full max-w-4xl p-6 flex flex-col chat-container">
+        <div className="bg-white/90 backdrop-blur-md rounded-xl shadow-lg w-full max-w-4xl p-6 flex flex-col">
           {/* Logo + título */}
-          <div className="flex flex-col items-center mb-4 header">
-            <img src="/DxPro.png" alt="DxPro Logo" className="w-20 h-20 mb-2" />
+          <div className="flex flex-col items-center mb-4">
+            <img src="/DxPro.png" alt="DxPro Logo" className="w-24 h-24 mb-2" />
             <h1 className="text-2xl font-bold text-blue-900">
               BIENVENIDO A DXPRO
             </h1>
@@ -84,10 +81,7 @@ export default function App() {
           {/* Chat */}
           <div className="flex-1 overflow-y-auto space-y-3 mb-4 p-3 chat-box">
             {messages.map((msg, i) => (
-              <div
-                key={i}
-                className={`message ${msg.autor} animate-fadeIn`}
-              >
+              <div key={i} className={`message ${msg.autor}`}>
                 {msg.texto}
               </div>
             ))}
@@ -95,7 +89,7 @@ export default function App() {
           </div>
 
           {/* Input */}
-          <div className="flex gap-2 input-area">
+          <div className="flex gap-2">
             <input
               type="text"
               className="flex-1 p-2 border rounded"
@@ -112,27 +106,6 @@ export default function App() {
             </button>
           </div>
         </div>
-      </div>
-
-      {/* 🔹 Sección Tutorial */}
-      <div id="tutorial" className="p-10 text-center text-gray-800">
-        <h2 className="text-3xl font-bold mb-4 text-blue-800">Tutorial</h2>
-        <p className="text-lg max-w-3xl mx-auto">
-          Aquí irán los pasos explicativos para que el estudiante aprenda cómo
-          interactuar con el paciente virtual. Explicá cómo iniciar la anamnesis,
-          qué tipo de preguntas hacer y cómo interpretar las respuestas.
-        </p>
-      </div>
-
-      {/* 🔹 Sección Inicio */}
-      <div id="about" className="p-10 text-center text-gray-800 bg-blue-50">
-        <h2 className="text-3xl font-bold mb-4 text-blue-800">Sobre DxPro</h2>
-        <p className="text-lg max-w-3xl mx-auto">
-          Bienvenidos a DxPro, un simulador virtual de casos clínicos donde podrás desarrollar tus habilidades clinicomédicas. 
-          La idea surge como parte de un proyecto de investigación sobre el uso de herramientas digitales (como IA) 
-          en el desarrollo académico de estudiantes de Medicina y Enfermería, en la Facultad de Ciencias de la Salud 
-          perteneciente a la Universidad Nacional del Centro de la Provincia de Buenos Aires.
-        </p>
       </div>
     </div>
   );
