@@ -1,12 +1,42 @@
 import { useState, useEffect, useRef } from "react";
 import "./App.css";
 import "./index.css";
+import Navbar from "./components/Navbar";
 
 export default function App() {
   const [messages, setMessages] = useState([]);
   const [input, setInput] = useState("");
   const BACKEND_URL = "https://dxproes-backend.onrender.com";
   const chatEndRef = useRef(null);
+  return (
+    <div className="min-h-screen flex flex-col">
+      {/* Navbar fijo arriba */}
+      <Navbar />
+
+      {/* Contenido principal con secciones */}
+      <main className="flex-1 mt-20">
+        <section id="inicio" className="h-screen flex items-center justify-center text-white">
+          <h1 className="text-4xl font-bold">Bienvenido a DxPro</h1>
+        </section>
+
+        <section id="tutorial" className="h-screen flex items-center justify-center bg-gray-900 text-white">
+          <h2 className="text-3xl">Tutorial</h2>
+        </section>
+
+        <section id="basicos" className="h-screen flex items-center justify-center bg-gray-800 text-white">
+          <h2 className="text-3xl">Casos básicos (chatbot va acá)</h2>
+        </section>
+
+        <section id="avanzados" className="h-screen flex items-center justify-center bg-gray-700 text-white">
+          <h2 className="text-3xl">Casos avanzados</h2>
+        </section>
+
+        <section id="contacto" className="h-screen flex items-center justify-center bg-gray-600 text-white">
+          <h2 className="text-3xl">Contacto</h2>
+        </section>
+      </main>
+    </div>
+  );
 
   const scrollToBottom = () => {
     chatEndRef.current?.scrollIntoView({ behavior: "auto" }); // instantáneo
