@@ -2,11 +2,13 @@
 @tailwind components;
 @tailwind utilities;
 
+/* Estilos de fondo globales */
 body {
   margin: 0;
-  background-image: url('/fondo.png');
+  font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Ubuntu, Cantarell, "Helvetica Neue", Arial, "Noto Sans", "Apple Color Emoji", "Segoe UI Emoji";
+  background-image: url('/fondo.png'); /* Asegúrate de que esta ruta sea correcta */
   background-size: cover;
   background-position: center;
   background-attachment: fixed;
-  font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Ubuntu, Cantarell, "Helvetica Neue", Arial, "Noto Sans", "Apple Color Emoji", "Segoe UI Emoji";
+  min-height: 100vh;
 }
