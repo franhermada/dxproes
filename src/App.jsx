@@ -7,16 +7,16 @@ export default function App() {
   const [input, setInput] = useState("");
   const chatEndRef = useRef(null);
 
-  const [section, setSection] = useState("inicio"); // controla qué sección se muestra
+  const [section, setSection] = useState("inicio");
 
   const BACKEND_URL = "https://dxproes-backend.onrender.com";
 
-  // Auto-scroll en chat
+  // Auto-scroll
   useEffect(() => {
     chatEndRef.current?.scrollIntoView({ behavior: "instant" });
   }, [messages]);
 
-  // Cargar presentación inicial
+  // Cargar presentación inicial solo en Casos Básicos
   useEffect(() => {
     if (section === "casos-basicos") {
       const obtenerCaso = async () => {
@@ -24,7 +24,7 @@ export default function App() {
           const res = await fetch(`${BACKEND_URL}/api/caso`);
           const data = await res.json();
           setMessages([{ texto: data.respuesta, autor: "bot" }]);
-        } catch (error) {
+        } catch {
           setMessages([{ texto: "⚠️ Error al cargar el caso clínico", autor: "bot" }]);
         }
       };
@@ -55,43 +55,52 @@ export default function App() {
     <div className="app-container">
       {/* NAVBAR */}
       <nav className="navbar">
-        <button className="nav-btn" onClick={() => setSection("inicio")}>Inicio</button>
-        <button className="nav-btn" onClick={() => setSection("tutorial")}>Tutorial</button>
-        <button className="nav-btn" onClick={() => setSection("casos-basicos")}>Casos Básicos</button>
-        <button className="nav-btn" onClick={() => setSection("casos-avanzados")}>Casos Avanzados</button>
-        <button className="nav-btn" onClick={() => setSection("sobre-dxpro")}>Sobre DxPro</button>
-        <button className="nav-btn" onClick={() => setSection("contacto")}>Contacto</button>
+        <div className="navbar-left">
+          <img src="/DxPro.png" alt="DxPro Logo" className="nav-logo" />
+        </div>
+        <div className="navbar-center">
+          <button className="nav-btn" onClick={() => setSection("inicio")}>Inicio</button>
+          <button className="nav-btn" onClick={() => setSection("tutorial")}>Tutorial</button>
+          <button className="nav-btn" onClick={() => setSection("casos-basicos")}>Casos Básicos</button>
+          <button className="nav-btn" onClick={() => setSection("casos-avanzados")}>Casos Avanzados</button>
+          <button className="nav-btn" onClick={() => setSection("sobre-dxpro")}>Sobre DxPro</button>
+          <button className="nav-btn" onClick={() => setSection("contacto")}>Contacto</button>
+        </div>
+        <div className="navbar-right">
+          <img src="/facultad.png" alt="Facultad Logo" className="nav-logo" />
+        </div>
       </nav>
 
-      {/* --- SECCIONES --- */}
+      {/* --- SECCIONES (todas con recuadro azul) --- */}
       {section === "inicio" && (
-        <div className="section">
+        <div className="section card">
           <h1>Bienvenido a DxPro</h1>
           <p>Un simulador virtual de casos clínicos donde podrás desarrollar tus habilidades clinicomédicas.</p>
         </div>
       )}
 
       {section === "tutorial" && (
-        <div className="section">
+        <div className="section card">
           <h2>Tutorial</h2>
           <p>1- Se le presentará un paciente al usuario, el cual deberá realizar una completa anamnesis basada en el motivo de consulta.
+            
             2- Una vez considere que la anamnesis está finalizada, deberá pasar al examen físico donde deberá detallar qué maniobra realiza 
             (Inspección visual, auscultación cardíaca, auscultación pulmonar, palpaciçon, etc)
+            
             3- Cuando el examen físico esté finalizado, continuará con los exámenes complementarios. En la versión básica, el sistema arrojará 
             directamente el resultado del estudio solicitado; mientras que en la versión avanzada, el sistema proporcionará el estudio solicitado 
             y el usuario deberá analizar si se hallan anomalías.
+           
             4- Finalmente, en base a la anamnesis, el examen físico y los estudios complementarios, el usuario deberá dar un diagnóstico 
-            presuntivo del paciente. En la versión avanzada, también se agregá tratamiento (tanto farmacológico, como no farmacológico).
-</p>
+            presuntivo del paciente. En la versión avanzada, también se agregá tratamiento (tanto farmacológico, como no farmacológico).</p>
         </div>
       )}
 
       {section === "casos-basicos" && (
-        <div className="section">
+        <div className="section card">
           <h2>Casos Básicos</h2>
           <p>Casos de baja complejidad con resultado directo de los estudios complementarios solicitados.</p>
 
-          {/* Chat SOLO en Casos Básicos */}
           <div className="chat-wrapper">
             <div className="chat-card">
               <div className="chat-header">
@@ -124,7 +133,7 @@ export default function App() {
       )}
 
       {section === "casos-avanzados" && (
-        <div className="section">
+        <div className="section card">
           <h2>Casos Avanzados</h2>
           <p>Casos de mayor complejidad, donde el usario deberá hacer la interpretación de los estudios complementarios
             por su propia cuenta.</p>
@@ -132,7 +141,7 @@ export default function App() {
       )}
 
       {section === "sobre-dxpro" && (
-        <div className="section">
+        <div className="section card">
           <h2>Sobre DxPro</h2>
           <p>DxPro surge como parte de un proyecto de investigación sobre el uso de herramientas digitales (como IA) 
             en el desarrollo académico de estudiantes de Medicina y Enfermería, en la Facultad de Ciencias de la Salud 
@@ -141,7 +150,7 @@ export default function App() {
       )}
 
       {section === "contacto" && (
-        <div className="section">
+        <div className="section card">
           <h2>Contacto</h2>
           <p>Escribinos a <b>dxproes@gmail.com</b></p>
         </div>
