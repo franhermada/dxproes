@@ -125,3 +125,23 @@
   from { opacity: 0; transform: translateY(5px); }
   to { opacity: 1; transform: translateY(0); }
 }
+/* Secciones */
+.section {
+  min-height: 100vh;
+  padding: 80px 20px;
+  color: white;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+#tutorial, #casos-basicos, #casos-avanzados, #sobre-dxpro, #contacto {
+  background: rgba(30, 58, 138, 0.8);
+  backdrop-filter: blur(6px);
+  border-radius: 16px;
+  margin: 20px;
+  padding: 40px;
+  max-width: 800px;
+  text-align: center;
+}
