@@ -80,21 +80,16 @@ export default function App() {
       )}
 
       {section === "tutorial" && (
-        <div className="section card">
-          <h2>Tutorial</h2>
-          <p>1- Se le presentará un paciente al usuario, el cual deberá realizar una completa anamnesis basada en el motivo de consulta.
-            
-            2- Una vez considere que la anamnesis está finalizada, deberá pasar al examen físico donde deberá detallar qué maniobra realiza 
-            (Inspección visual, auscultación cardíaca, auscultación pulmonar, palpaciçon, etc)
-            
-            3- Cuando el examen físico esté finalizado, continuará con los exámenes complementarios. En la versión básica, el sistema arrojará 
-            directamente el resultado del estudio solicitado; mientras que en la versión avanzada, el sistema proporcionará el estudio solicitado 
-            y el usuario deberá analizar si se hallan anomalías.
-           
-            4- Finalmente, en base a la anamnesis, el examen físico y los estudios complementarios, el usuario deberá dar un diagnóstico 
-            presuntivo del paciente. En la versión avanzada, también se agregá tratamiento (tanto farmacológico, como no farmacológico).</p>
-        </div>
-      )}
+  <div className="section card">
+    <h2>Tutorial</h2>
+    <ol className="tutorial-list">
+      <li>1- Se le presentará un paciente al usuario, el cual deberá realizar una completa anamnesis basada en el motivo de consulta.</li>
+      <li>2- Una vez considere que la anamnesis está finalizada, deberá pasar al examen físico donde deberá detallar qué maniobra realiza (Inspección visual, auscultación cardíaca, auscultación pulmonar, palpación, etc).</li>
+      <li>3- Cuando el examen físico esté finalizado, continuará con los exámenes complementarios. En la versión básica, el sistema arrojará directamente el resultado del estudio solicitado; mientras que en la versión avanzada, el sistema proporcionará el estudio solicitado y el usuario deberá analizar si se hallan anomalías.</li>
+      <li>4- Finalmente, en base a la anamnesis, el examen físico y los estudios complementarios, el usuario deberá dar un diagnóstico presuntivo del paciente. En la versión avanzada, también se agregará tratamiento (tanto farmacológico, como no farmacológico).</li>
+    </ol>
+  </div>
+)}
 
       {section === "casos-basicos" && (
         <div className="section card">
