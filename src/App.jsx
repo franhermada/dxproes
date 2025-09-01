@@ -63,7 +63,6 @@ export default function App() {
           <button className="nav-btn" onClick={() => setSection("tutorial")}>Tutorial</button>
           <button className="nav-btn" onClick={() => setSection("casos-basicos")}>Casos Básicos</button>
           <button className="nav-btn" onClick={() => setSection("casos-avanzados")}>Casos Avanzados</button>
-          <button className="nav-btn" onClick={() => setSection("sobre-dxpro")}>Sobre DxPro</button>
           <button className="nav-btn" onClick={() => setSection("contacto")}>Contacto</button>
         </div>
         <div className="navbar-right">
@@ -75,7 +74,9 @@ export default function App() {
       {section === "inicio" && (
         <div className="section card">
           <h1>Bienvenido a DxPro</h1>
-          <p>Un simulador virtual de casos clínicos donde podrás desarrollar tus habilidades clinicomédicas.</p>
+          <p>Un simulador virtual de casos clínicos donde podrás desarrollar tus habilidades clinicomédicas. DxPro surge como parte de un proyecto de investigación sobre el uso de herramientas digitales (como IA) 
+            en el desarrollo académico de estudiantes de Medicina y Enfermería, en la Facultad de Ciencias de la Salud 
+            perteneciente a la Universidad Nacional del Centro de la Provincia de Buenos Aires.</p>
         </div>
       )}
 
@@ -132,15 +133,6 @@ export default function App() {
           <h2>Casos Avanzados</h2>
           <p>Casos de mayor complejidad, donde el usario deberá hacer la interpretación de los estudios complementarios
             por su propia cuenta.</p>
-        </div>
-      )}
-
-      {section === "sobre-dxpro" && (
-        <div className="section card">
-          <h2>Sobre DxPro</h2>
-          <p>DxPro surge como parte de un proyecto de investigación sobre el uso de herramientas digitales (como IA) 
-            en el desarrollo académico de estudiantes de Medicina y Enfermería, en la Facultad de Ciencias de la Salud 
-            perteneciente a la Universidad Nacional del Centro de la Provincia de Buenos Aires.</p>
         </div>
       )}
 
