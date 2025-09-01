@@ -13,7 +13,7 @@ export default function App() {
 
   // Auto-scroll
   useEffect(() => {
-    chatEndRef.current?.scrollIntoView({ behavior: "instant" });
+    chatEndRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages]);
 
   // Cargar presentación inicial solo en Casos Básicos
@@ -29,23 +29,40 @@ export default function App() {
         }
       };
       obtenerCaso();
+    } else {
+      setMessages([]); // limpiar mensajes si cambio de sección
     }
   }, [section]);
 
   // Enviar mensaje
   const handleSendMessage = async () => {
     if (!input.trim()) return;
+
+    // Agregar mensaje del usuario
     setMessages(prev => [...prev, { texto: input, autor: "usuario" }]);
+    const pregunta = input;
     setInput("");
 
     try {
       const respuesta = await fetch(`${BACKEND_URL}/api/preguntar`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ pregunta: input }),
+        body: JSON.stringify({ pregunta }),
       });
       const data = await respuesta.json();
-      setMessages(prev => [...prev, { texto: data.respuesta, autor: "bot" }]);
+
+      if (Array.isArray(data.respuestas)) {
+        // Varias respuestas = varias burbujas
+        setMessages(prev => [
+          ...prev,
+          ...data.respuestas.map(r => ({ texto: r, autor: "bot" }))
+        ]);
+      } else if (data.respuesta) {
+        // Fallback si viene un string
+        setMessages(prev => [...prev, { texto: data.respuesta, autor: "bot" }]);
+      } else {
+        setMessages(prev => [...prev, { texto: "⚠️ Respuesta no válida", autor: "bot" }]);
+      }
     } catch {
       setMessages(prev => [...prev, { texto: "⚠️ Error al conectar con el servidor", autor: "bot" }]);
     }
@@ -70,12 +87,12 @@ export default function App() {
         </div>
       </nav>
 
-      {/* --- SECCIONES (todas con recuadro azul) --- */}
+      {/* --- SECCIONES --- */}
       {section === "inicio" && (
         <div className="section card">
           <h1>Bienvenido a DxPro</h1>
           <p>
-            Un simulador virtual de casos clínicos donde podrás desarrollar tus habilidades clinicomédicas. DxPro surge como parte de un proyecto de investigación sobre el uso de herramientas digitales (como IA) 
+            Un simulador virtual de casos clínicos donde podrás desarrollar tus habilidades clínicas. DxPro surge como parte de un proyecto de investigación sobre el uso de herramientas digitales (como IA) 
             en el desarrollo académico de estudiantes de Medicina y Enfermería, en la Facultad de Ciencias de la Salud 
             perteneciente a la Universidad Nacional del Centro de la Provincia de Buenos Aires.
           </p>
