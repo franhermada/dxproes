@@ -118,6 +118,7 @@
   border-radius: 8px;
   cursor: pointer;
 }
+
 .tutorial-list {
   text-align: left;
   margin: 20px auto;
@@ -125,4 +126,15 @@
   max-width: 800px;
   line-height: 1.6;
   color: #00264d;
+}
+
+.inicio-logo-container {
+  display: flex;
+  justify-content: center;
+  margin-top: 20px;
+}
+
+.inicio-logo {
+  width: 150px;
+  height: auto;
 }
