@@ -9,7 +9,7 @@ export default function App() {
 
   const BACKEND_URL = "https://dxproes-backend.onrender.com";
 
-  // Scroll automático hacia abajo (instantáneo)
+  // Scroll automático
   useEffect(() => {
     chatEndRef.current?.scrollIntoView({ behavior: "instant" });
   }, [messages]);
@@ -53,13 +53,21 @@ export default function App() {
     <div className="app-container">
       {/* NAVBAR */}
       <nav className="navbar">
-        <img src="/DxPro.png" alt="DxPro Logo" className="logo-navbar" />
-        <h1 className="navbar-title">DxPro - Simulador Clínico</h1>
+        <button className="nav-btn">Inicio</button>
+        <button className="nav-btn">Casos</button>
+        <button className="nav-btn">Acerca de</button>
       </nav>
 
       {/* CHAT */}
       <div className="chat-wrapper">
         <div className="chat-card">
+          
+          {/* Logo + Título dentro del chat */}
+          <div className="chat-header">
+            <img src="/DxPro.png" alt="DxPro Logo" className="logo-chat" />
+            <h1 className="chat-title">DxPro - Simulador Clínico</h1>
+          </div>
+
           <div className="chat-box">
             {messages.map((msg, i) => (
               <div key={i} className={`message ${msg.autor}`}>

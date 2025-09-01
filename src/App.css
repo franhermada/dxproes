@@ -1,8 +1,38 @@
-/* Estilos principales del chat */
+/* --- NAVBAR --- */
+.navbar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  background: #1e3a8a;
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+  padding: 10px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+  z-index: 10;
+}
+
+.nav-btn {
+  background: transparent;
+  border: none;
+  color: white;
+  font-size: 1rem;
+  cursor: pointer;
+  padding: 6px 12px;
+  border-radius: 6px;
+  transition: background 0.3s;
+}
+
+.nav-btn:hover {
+  background: rgba(255,255,255,0.2);
+}
+
+/* --- CHAT --- */
 .chat-wrapper {
   display: flex;
   justify-content: center;
-  margin-top: 100px; /* deja espacio para el navbar fijo */
+  margin-top: 100px; /* espacio para navbar */
 }
 
 .chat-card {
@@ -17,6 +47,26 @@
   padding: 16px;
 }
 
+/* Header dentro del chat */
+.chat-header {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: 16px;
+}
+
+.logo-chat {
+  width: 80px;
+  height: 80px;
+}
+
+.chat-title {
+  color: white;
+  font-size: 1.5rem;
+  margin-top: 8px;
+}
+
+/* Mensajes */
 .chat-box {
   flex: 1;
   overflow-y: auto;
@@ -44,6 +94,7 @@
   margin-right: auto;
 }
 
+/* Input */
 .input-area {
   display: flex;
   gap: 8px;
@@ -69,34 +120,8 @@
   background: #1d4ed8;
 }
 
-/* Animación de aparición */
+/* Animación */
 @keyframes fadeIn {
   from { opacity: 0; transform: translateY(5px); }
   to { opacity: 1; transform: translateY(0); }
-}
-
-/* Navbar */
-.navbar {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  background: #1e3a8a;
-  color: white;
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  padding: 12px 24px;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.3);
-  z-index: 10;
-}
-
-.logo-navbar {
-  width: 40px;
-  height: 40px;
-}
-
-.navbar-title {
-  font-size: 1.2rem;
-  font-weight: bold;
 }
