@@ -10,16 +10,20 @@
       "respuesta": "Tengo 55 años."
     },
     "motivo_consulta": {
-      "variantes": ["por qué viene", "a que viene", "que lo trae por acá","por que venis"],
+      "variantes": ["por qué viene", "a que viene", "que lo trae por acá", "por que venis"],
       "respuesta": "Vine porque me duele el pecho."
     },
     "inicio": {
       "variantes": ["cuando empezo", "desde cuando", "hace cuanto", "cuando arranco"],
       "respuesta": "El dolor empezó hace 2 horas."
     },
+    "contexto_inicio": {
+      "variantes": ["que estabas haciendo", "actividad al inicio", "cuando comenzó que hacias", "que hacias cuando empezo"],
+      "respuesta": "El dolor comenzó mientras subía las escaleras."
+    },
     "localizacion": {
       "variantes": ["donde te duele", "ubicacion del dolor", "en que parte", "donde lo sentis"],
-      "respuesta": "Lo siento en el medio, en la boca del estomago."
+      "respuesta": "Lo siento en el medio, en la boca del estómago."
     },
     "irradiacion": {
       "variantes": ["se va para algun lado", "se corre", "irradia", "va para otro lado"],
@@ -33,23 +37,48 @@
       "variantes": ["cuanto te duele", "intensidad", "escala del 1 al 10", "dolor fuerte"],
       "respuesta": "En una escala del 1 al 10, diría 8."
     },
+    "evolucion": {
+      "variantes": ["como evoluciono", "cambio el dolor", "mejora o empeora", "sigue igual"],
+      "respuesta": "Desde que empezó se mantuvo igual de intenso."
+    },
     "alivio": {
       "variantes": ["que lo calma", "que lo mejora", "algo lo alivia", "como se te pasa"],
       "respuesta": "Me calma un poco cuando me siento y respiro hondo."
     },
     "factores": {
-      "variantes": ["que lo empeora", "algo lo hace peor", "factores de riesgo"],
+      "variantes": ["que lo empeora", "algo lo hace peor", "factores de riesgo", "que lo desencadena"],
       "respuesta": "Se pone peor cuando camino o hago esfuerzo."
     },
+    "disnea": {
+      "variantes": ["tenes disnea", "dificultad respiratoria", "te falta el aire", "respiras mal"],
+      "respuesta": "Sí, siento que me falta un poco el aire desde que empezó el dolor."
+    },
+    "sudoracion": {
+      "variantes": ["estas transpirando", "sudor", "estas sudado", "diaforesis"],
+      "respuesta": "Sí, estoy sudando bastante."
+    },
+    "nauseas": {
+      "variantes": ["tenes nauseas", "ganas de vomitar", "vomito", "te sentis mareado"],
+      "respuesta": "Sí, tuve náuseas pero no llegué a vomitar."
+    },
+    "estado_actual": {
+      "variantes": ["como te sentis ahora", "estado actual", "como estas ahora", "te sentis igual"],
+      "respuesta": "Me sigo sintiendo mal, con dolor fuerte en el pecho y un poco de falta de aire."
+    },
+
     "antecedentes": {
       "variantes": ["antecedentes", "tenes enfermedades", "alguna enfermedad", "sos hipertenso"],
       "respuesta": "Tengo hipertensión hace años y colesterol alto."
+    },
+    "diabetes": {
+      "variantes": ["sos diabetico", "tenes diabetes", "azucar alta"],
+      "respuesta": "No, nunca me dijeron que tenga diabetes."
     },
     "habitos_tabaquicos": {
       "variantes": ["fumas", "tabaco", "cigarro"],
       "respuesta": "Fumo un atado por día desde hace 30 años."
     },
-    "habitos_alcohol": { 
+    "habitos_alcohol": {
       "variantes": ["bebes", "alcohol", "cerveza", "vino"],
       "respuesta": "Una copita de vino con las comidas."
     },
