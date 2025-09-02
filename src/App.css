@@ -138,3 +138,29 @@
   width: 150px;
   height: auto;
 }
+
+.donate-button {
+  display: inline-block;
+  margin-top: 1rem;
+  padding: 12px 24px;
+  font-size: 1.1rem;
+  font-weight: bold;
+  color: #fff;
+  background: linear-gradient(45deg, #ff7a18, #ffb347);
+  border: none;
+  border-radius: 999px;
+  text-decoration: none;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  cursor: pointer;
+}
+
+.donate-button:hover {
+  transform: scale(1.05);
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.25);
+  background: linear-gradient(45deg, #ff914d, #ffd166);
+}
+
+.donate-button:active {
+  transform: scale(0.98);
+}
