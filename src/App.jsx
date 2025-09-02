@@ -38,7 +38,6 @@ export default function App() {
   const handleSendMessage = async () => {
     if (!input.trim()) return;
 
-    // Agregar mensaje del usuario
     setMessages(prev => [...prev, { texto: input, autor: "usuario" }]);
     const pregunta = input;
     setInput("");
@@ -52,13 +51,11 @@ export default function App() {
       const data = await respuesta.json();
 
       if (Array.isArray(data.respuestas)) {
-        // Varias respuestas = varias burbujas
         setMessages(prev => [
           ...prev,
           ...data.respuestas.map(r => ({ texto: r, autor: "bot" }))
         ]);
       } else if (data.respuesta) {
-        // Fallback si viene un string
         setMessages(prev => [...prev, { texto: data.respuesta, autor: "bot" }]);
       } else {
         setMessages(prev => [...prev, { texto: "⚠️ Respuesta no válida", autor: "bot" }]);
@@ -81,6 +78,7 @@ export default function App() {
           <button className="nav-btn" onClick={() => setSection("casos-basicos")}>Casos Básicos</button>
           <button className="nav-btn" onClick={() => setSection("casos-avanzados")}>Casos Avanzados</button>
           <button className="nav-btn" onClick={() => setSection("contacto")}>Contacto</button>
+          <button className="nav-btn" onClick={() => setSection("colaborar")}>Colaborar</button>
         </div>
         <div className="navbar-right">
           <img src="/facultad.png" alt="Facultad Logo" className="nav-logo" />
@@ -92,7 +90,7 @@ export default function App() {
         <div className="section card">
           <h1>Bienvenido a DxPro</h1>
           <p>
-            Un simulador virtual de casos clínicos donde podrás desarrollar tus habilidades clínicas. DxPro surge como parte de un proyecto de investigación sobre el uso de herramientas digitales (como IA) 
+            Un simulador virtual de casos clínicos donde podrás desarrollar tus habilidades clinicomédicas. DxPro surge como parte de un proyecto de investigación sobre el uso de herramientas digitales (como IA) 
             en el desarrollo académico de estudiantes de Medicina y Enfermería, en la Facultad de Ciencias de la Salud 
             perteneciente a la Universidad Nacional del Centro de la Provincia de Buenos Aires.
           </p>
@@ -164,6 +162,28 @@ export default function App() {
         <div className="section card">
           <h2>Contacto</h2>
           <p>Escribinos a <b>dxproes@gmail.com</b></p>
+        </div>
+      )}
+
+      {section === "colaborar" && (
+        <div className="section card">
+          <h2>Colaborar con DxPro</h2>
+          <p>
+            DxPro es un proyecto <b>100% gratuito</b>, desarrollado para estudiantes de Medicina y Enfermería.
+            No tiene fines de lucro: todo el contenido es libre y abierto.
+          </p>
+          <p>
+            Si te resulta útil y querés apoyar el mantenimiento y el desarrollo de nuevos casos clínicos,
+            podés colaborar invitandome un cafecito ☕
+          </p>
+          <a
+            href="https://cafecito.app/dxproes"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="donate-button"
+          >
+            ☕ Colaborar en Cafecito
+          </a>
         </div>
       )}
     </div>
