@@ -18,6 +18,7 @@ export default function App() {
 
   const [section, setSection] = useState("inicio");
   const [selectedSystem, setSelectedSystem] = useState(null);
+  const [caseId, setCaseId] = useState(null); // ⬅️ nuevo estado para guardar el caseId
 
   const BACKEND_URL = "https://dxproes-backend.onrender.com";
 
@@ -37,6 +38,7 @@ export default function App() {
               : `?system=${encodeURIComponent(selectedSystem)}`;
           const res = await fetch(`${BACKEND_URL}/api/caso${qs}`);
           const data = await res.json();
+          setCaseId(data.casoId); // ⬅️ guardar el caseId
           const presentacion = data.presentacion || data.respuesta;
           setMessages([{ texto: presentacion, autor: "bot" }]);
         } catch {
@@ -48,6 +50,7 @@ export default function App() {
       obtenerCaso();
     } else {
       setMessages([]); // limpiar mensajes si cambio de sección o deselecciono sistema
+      setCaseId(null); // limpiar caseId
     }
   }, [section, selectedSystem]);
 
@@ -63,7 +66,7 @@ export default function App() {
       const respuesta = await fetch(`${BACKEND_URL}/api/preguntar`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ pregunta }),
+        body: JSON.stringify({ pregunta, caseId }), // ⬅️ enviar también caseId
       });
       const data = await respuesta.json();
 
@@ -92,6 +95,7 @@ export default function App() {
   const handleBackToSystems = () => {
     setSelectedSystem(null);
     setMessages([]);
+    setCaseId(null);
   };
 
   return (
@@ -132,7 +136,7 @@ export default function App() {
           <h1>Bienvenido a DxPro</h1>
           <p>
             Un simulador virtual de casos clínicos donde podrás desarrollar tus
-            habilidades clinicomédicas. DxPro surge como parte de un proyecto de
+            habilidades clinicas. DxPro surge como parte de un proyecto de
             investigación sobre el uso de herramientas digitales (como IA) en el
             desarrollo académico de estudiantes de Medicina y Enfermería, en la
             Facultad de Ciencias de la Salud perteneciente a la Universidad Nacional
