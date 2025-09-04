@@ -1,9 +1,10 @@
+// server/index.js
 import express from "express";
 import cors from "cors";
 import fs from "fs";
 import path from "path";
 import { fileURLToPath } from "url";
-import fetch from "node-fetch";
+import fetch from "node-fetch"; // si tenés Node 18+ podés usar fetch global
 import Fuse from "fuse.js";
 
 const __filename = fileURLToPath(import.meta.url);
@@ -14,66 +15,46 @@ const PORT = process.env.PORT || 10000;
 
 app.use(
   cors({
-    origin: [
-      "http://localhost:5173",
-      "https://dxproes.netlify.app",
-    ],
+    origin: ["http://localhost:5173", "https://dxproes.netlify.app"],
   })
 );
 app.use(express.json());
 
-// =========================
-//  CARGA DEL CASO CLÍNICO
-// =========================
-const jsonFilePath = path.join(__dirname, "casos", "caso1.json");
-let clinicalCaseData = null;
+// -----------------------------
+// Rutas base de casos
+// -----------------------------
+const BASE_CASES_PATH = path.join(__dirname, "casos_basicos");
 
-function loadCase() {
-  try {
-    const content = fs.readFileSync(jsonFilePath, "utf8");
-    clinicalCaseData = JSON.parse(content);
-    console.log("✅ caso1.json cargado.");
-  } catch (e) {
-    console.error("❌ No se pudo cargar caso1.json:", e.message);
-    clinicalCaseData = null;
-  }
-}
-loadCase();
+// Cache dinámico de casos cargados: { caseId: { data, variantMapExact, variantIndex, fuse } }
+const loadedCases = {};
 
-// Hot reload simple si querés (opcional):
-// fs.watch(jsonFilePath, { persistent: false }, () => {
-//   console.log("♻️ Recargando caso1.json...");
-//   loadCase();
-// });
-
-// =========================
-//  NORMALIZACIÓN + NLP LIGERO
-// =========================
+// -----------------------------
+// Utilidades de texto / NLP ligero
+// -----------------------------
 const STOPWORDS_ES = new Set([
   "el","la","los","las","un","una","unos","unas","de","del","al","a","ante","bajo","cabe","con",
   "contra","desde","durante","en","entre","hacia","hasta","para","por","segun","sin","sobre","tras",
-  "y","o","u","e","que","qué","como","cómo","cual","cuales","cuales","cuál","cuáles","cuanto","cuánta",
+  "y","o","u","e","que","qué","como","cómo","cual","cuales","cuál","cuáles","cuanto","cuánta",
   "cuantos","cuántos","cuanta","cuánta","cuando","cuándo","donde","dónde","quien","quién","quienes","quiénes",
-  "yo","tu","tú","vos","usted","ustedes","el","ella","ellos","ellas","mi","mi","su","sus","mis",
-  "es","son","sera","será","fue","fueron","esta","está","estan","están","soy","eres","somos","ser","estar",
-  "hay","habia","había","hubo","tener","tiene","tenes","tienes","tienen","hace","hacia"
+  "yo","tu","tú","vos","usted","ustedes","mi","mis","su","sus","es","son","esta","está","estan","están",
+  "soy","eres","somos","ser","estar","hay","tener","tiene","tenes","tienes","tienen","hace","hacia"
 ]);
 
 function normalize(text) {
-  return (text || "")
+  return (String(text || ""))
     .toLowerCase()
     .normalize("NFD")
-    .replace(/[\u0300-\u036f]/g, "") // tildes
-    .replace(/[^\p{L}\p{N}\s]/gu, " ") // punt, símbolos
+    .replace(/[\u0300-\u036f]/g, "")               // quita tildes
+    .replace(/[^\p{L}\p{N}\s]/gu, " ")             // quita signos y símbolos
     .replace(/\s+/g, " ")
     .trim();
 }
 
 function tokenize(text) {
   const norm = normalize(text);
-  const tokens = norm.split(" ").filter(t => t.length > 0);
-  // quitamos stopwords y tokens muy cortos (evita que “fr”, “fc” ensucien)
-  return tokens.filter(t => !STOPWORDS_ES.has(t) && t.length >= 3);
+  const toks = norm.split(" ").filter(t => t.length > 0);
+  // eliminar stopwords y tokens muy cortos
+  return toks.filter(t => !STOPWORDS_ES.has(t) && t.length >= 3);
 }
 
 function jaccard(aTokens, bTokens) {
@@ -85,114 +66,128 @@ function jaccard(aTokens, bTokens) {
   return uni === 0 ? 0 : inter / uni;
 }
 
-// =========================
-//  PREPARACIÓN DE ÍNDICES
-// =========================
-let variantMapExact = new Map(); // variante normalizada → { intent, respuesta }
-let variantIndex = [];           // [{ intent, variante, tokens, respuesta }]
-let fuse = null;
-
-function buildIndexes() {
-  variantMapExact = new Map();
-  variantIndex = [];
-
-  if (!clinicalCaseData?.respuestas) return;
-
-  for (const [intent, data] of Object.entries(clinicalCaseData.respuestas)) {
-    const variantes = Array.isArray(data.variantes) ? data.variantes : [];
-    for (const v of variantes) {
-      const norm = normalize(v);
-      variantMapExact.set(norm, { intent, respuesta: data.respuesta });
-      variantIndex.push({
-        intent,
-        variante: v,
-        tokens: tokenize(v),
-        respuesta: data.respuesta,
-      });
-    }
-  }
-
-  // Fuse como tercera capa
-  const fuseList = Object.entries(clinicalCaseData.respuestas).map(([intent, data]) => ({
-    intent,
-    variantes: data.variantes,
-    respuesta: data.respuesta,
-  }));
-  fuse = new Fuse(fuseList, {
-    keys: ["variantes"],
-    includeScore: true,
-    threshold: 0.34,
-    ignoreLocation: true,
-    minMatchCharLength: 3,
-  });
-}
-
-buildIndexes();
-
-// =========================
-//  MATCHING ROBUSTO
-// =========================
+// split preguntas compuestas
 function splitQuestions(input) {
-  // separa por ?, ., , y nexo " y / también / además"
   return normalize(input)
     .split(/\?+|\.|,| y | tambien | además | ademas/gi)
     .map(s => s.trim())
     .filter(Boolean);
 }
 
-function findBestAnswer(question) {
+// -----------------------------
+// Indización por caso (variantMapExact, variantIndex, fuse)
+// -----------------------------
+function buildIndexesForCase(caseData) {
+  const variantMapExact = new Map();
+  const variantIndex = [];
+  const fuseList = [];
+
+  const respuestas = caseData.respuestas || {};
+  for (const [intent, obj] of Object.entries(respuestas)) {
+    const variantes = Array.isArray(obj.variantes) ? obj.variantes : [];
+    for (const v of variantes) {
+      const norm = normalize(v);
+      variantMapExact.set(norm, { intent, respuesta: obj.respuesta });
+      variantIndex.push({
+        intent,
+        variante: v,
+        tokens: tokenize(v),
+        respuesta: obj.respuesta,
+      });
+    }
+    fuseList.push({ intent, variantes, respuesta: obj.respuesta });
+  }
+
+  const fuse = new Fuse(fuseList, {
+    keys: ["variantes"],
+    includeScore: true,
+    threshold: 0.34,
+    ignoreLocation: true,
+    minMatchCharLength: 3,
+  });
+
+  return { variantMapExact, variantIndex, fuse };
+}
+
+// Cargar un caso desde disco (y construir índices)
+function loadCase(caseId, casePath) {
+  if (loadedCases[caseId]) return loadedCases[caseId];
+
+  const raw = fs.readFileSync(casePath, "utf-8");
+  const data = JSON.parse(raw);
+
+  const { variantMapExact, variantIndex, fuse } = buildIndexesForCase(data);
+  loadedCases[caseId] = { data, variantMapExact, variantIndex, fuse, casePath };
+  console.log(`[CASE] cargado ${caseId}`);
+  return loadedCases[caseId];
+}
+
+// Enumerar todos los casos (caseId, casePath)
+function getAllCasesList() {
+  const results = [];
+  if (!fs.existsSync(BASE_CASES_PATH)) return results;
+
+  const systems = fs.readdirSync(BASE_CASES_PATH, { withFileTypes: true })
+    .filter(d => d.isDirectory())
+    .map(d => d.name);
+
+  for (const sys of systems) {
+    const sysPath = path.join(BASE_CASES_PATH, sys);
+    const files = fs.readdirSync(sysPath).filter(f => f.endsWith(".json"));
+    for (const f of files) {
+      results.push({ caseId: `${sys}/${f}`, casePath: path.join(sysPath, f) });
+    }
+  }
+  return results;
+}
+
+// -----------------------------
+// Matching robusto para 1 pregunta (usa índices del caso)
+// -----------------------------
+function findBestAnswerForCase(question, caseObj) {
   const qNorm = normalize(question);
   const qTokens = tokenize(question);
 
-  // 1) Coincidencia exacta de variante
-  const exact = variantMapExact.get(qNorm);
+  // 1) coincidencia exacta de variante
+  const exact = caseObj.variantMapExact.get(qNorm);
   if (exact) return exact.respuesta;
 
-  // 2) Coincidencia por similitud de tokens (Jaccard)
-  //    Penalizamos variantes MUY cortas (tokens <= 1) y preferimos mayor similitud
+  // 2) similitud por tokens (Jaccard) — preferimos puntuaciones altas
   let bestToken = null;
   let bestScore = 0;
-  for (const item of variantIndex) {
+  for (const item of caseObj.variantIndex) {
     if (!item.tokens || item.tokens.length === 0) continue;
     const score = jaccard(qTokens, item.tokens);
-    // Bonus si comparten ≥2 tokens y la variante tiene ≥2 tokens
     const bonus = (score >= 0.5 && item.tokens.length >= 2 && qTokens.length >= 2) ? 0.05 : 0;
     const final = score + bonus;
-
     if (final > bestScore) {
       bestScore = final;
       bestToken = item;
     }
   }
-  // Umbral razonable para evitar falsos positivos ("respiratoria" vs "respiracion" confuso)
-  if (bestToken && bestScore >= 0.58) {
-    return bestToken.respuesta;
-  }
+  // Umbral: evitar falsos positivos
+  if (bestToken && bestScore >= 0.58) return bestToken.respuesta;
 
-  // 3) Fuzzy con Fuse (último recurso local)
-  if (fuse) {
-    const results = fuse.search(qNorm);
-    if (results.length) {
-      // si hay match muy bueno lo tomamos
-      const { item, score } = results[0];
-      if (score <= 0.30) return item.respuesta;
-
-      // si no es tan bueno, intentamos detectar coincidencia exacta entre variantes y la pregunta tokenizada
-      const maybeExact = item.variantes?.find(
-        v => normalize(v) === qNorm
-      );
-      if (maybeExact) return item.respuesta;
+  // 3) Fuse.js como último recurso local
+  if (caseObj.fuse) {
+    const res = caseObj.fuse.search(qNorm);
+    if (res.length) {
+      const top = res[0];
+      if (top.score <= 0.30) return top.item.respuesta;
+      // si una variante del item coincide exactamente con la pregunta, tomarla
+      const maybeExact = top.item.variantes?.find(v => normalize(v) === qNorm);
+      if (maybeExact) return top.item.respuesta;
     }
   }
 
-  // 4) Nada convincente: null → para que el caller decida fallback (Gemini) o "desconocido"
+  // 4) no convincente -> null (quien llama decide fallback)
   return null;
 }
 
-// =========================
-//  GEMINI (OPCIONAL)
-// =========================
-async function callGeminiAPI(pregunta) {
+// -----------------------------
+// GEMINI fallback (opcional)
+// -----------------------------
+async function callGeminiAPI(pregunta, caseData) {
   const apiKey = process.env.GEMINI_API_KEY;
   if (!apiKey) return null;
 
@@ -200,22 +195,22 @@ async function callGeminiAPI(pregunta) {
     "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-05-20:generateContent?key=" +
     apiKey;
 
+  // Prompt controlado: forzar que responda solo con info del caso
   const prompt = `
-Eres un paciente en un simulador clínico. Responde SOLO con la información disponible.
-Datos del caso:
-${JSON.stringify(clinicalCaseData, null, 2)}
+Eres un paciente simulado. Estos son los datos del caso:
+${JSON.stringify(caseData, null, 2)}
 
 Reglas:
-- Si la pregunta coincide con una variante de las respuestas, responde con la "respuesta" correspondiente.
-- Si NO hay información para responder, devuelve EXACTAMENTE: "${clinicalCaseData?.desconocido || "No entendí tu pregunta, ¿podés reformularla?"}".
-- No inventes datos.
+- RESPONDER SÓLO en base a la información provista arriba.
+- Si la información no está, devolver exactamente: "${caseData.desconocido || "No entendí tu pregunta, ¿podés reformularla?"}".
+- No inventar nuevos datos.
 
-Pregunta del estudiante: "${pregunta}".
+Pregunta del estudiante: "${pregunta}"
 `;
 
   const payload = {
     contents: [{ role: "user", parts: [{ text: prompt }] }],
-    generationConfig: { temperature: 0.1, maxOutputTokens: 180 },
+    generationConfig: { temperature: 0.15, maxOutputTokens: 200 },
   };
 
   try {
@@ -226,18 +221,19 @@ Pregunta del estudiante: "${pregunta}".
     });
     const data = await r.json();
     const text = data?.candidates?.[0]?.content?.parts?.[0]?.text?.trim();
-    return text || null;
-  } catch {
+    if (text) return text;
+    return null;
+  } catch (e) {
+    console.error("[GEMINI ERROR]", e.message || e);
     return null;
   }
 }
 
-// =========================
-//  EVALUACIÓN
-// =========================
+// -----------------------------
+// Evaluación: diagnóstico y tratamiento (similitud & matching flexible)
+// -----------------------------
 function similarityText(a, b) {
-  // Similaridad simple por Jaccard de tokens
-  return jaccard(tokenize(a), tokenize(b));
+  return jaccard(tokenize(a || ""), tokenize(b || ""));
 }
 
 function bestSimilarity(candidate, list) {
@@ -255,18 +251,16 @@ function bestSimilarity(candidate, list) {
 
 function evaluateDiagnosis(userText, expectedList) {
   if (!userText) return { correcto: false, similitud: 0, referencia: null };
-
   const { best, bestRef } = bestSimilarity(userText, expectedList || []);
-  const correcto = best >= 0.72; // umbral razonable
-  return { correcto, similitud: Number(best.toFixed(2)), referencia: correcto ? bestRef : null };
+  const correcto = best >= 0.72;
+  return { correcto, similitud: Number(best.toFixed(2)), referencia: correcto ? bestRef : bestRef };
 }
 
 function parseTreatmentItems(textOrArray) {
   if (Array.isArray(textOrArray)) return textOrArray.map(t => normalize(t)).filter(Boolean);
   const text = String(textOrArray || "");
-  // separa por comas, punto y coma, “ y ” y “ + ”
   return normalize(text)
-    .split(/,|;| y | \+ /g)
+    .split(/,|;|\+| y | e | y /g)
     .map(s => s.trim())
     .filter(Boolean);
 }
@@ -279,7 +273,6 @@ function evaluateTreatment(user, expectedList) {
   const faltantes = [];
   const extras = [];
 
-  // Matcheo flexible: si similitud ≥ 0.70 lo contamos como acierto
   const USED = new Set();
   for (const u of userItems) {
     const { best, bestRef } = bestSimilarity(u, exp.filter(e => !USED.has(e)));
@@ -295,107 +288,153 @@ function evaluateTreatment(user, expectedList) {
     if (!USED.has(e)) faltantes.push(e);
   }
 
-  const score =
-    exp.length === 0 ? 1 : Math.max(0, Math.min(1, aciertos.length / exp.length));
-
+  const puntaje = exp.length === 0 ? 1 : Math.max(0, Math.min(1, aciertos.length / exp.length));
   return {
     aciertos,
     faltantes,
     extras,
-    puntaje: Number(score.toFixed(2)),
+    puntaje: Number(puntaje.toFixed(2)),
   };
 }
 
-// =========================
-//  RUTAS
-// =========================
+// -----------------------------
+// ENDPOINTS
+// -----------------------------
+
+// Root
 app.get("/", (_req, res) => {
-  res.send("✅ DxPro API (match robusto + evaluación) lista.");
+  res.send("✅ DxPro API: casos por sistema + matching robusto + evaluación");
 });
 
-app.get("/api/caso", (_req, res) => {
-  if (!clinicalCaseData?.presentacion) {
-    return res.status(500).json({ respuesta: "Error: caso no cargado." });
-  }
-  res.json({ respuesta: clinicalCaseData.presentacion });
-});
+// GET /api/caso?system=<id>  (system=all para todos)
+app.get("/api/caso", (req, res) => {
+  try {
+    const system = (req.query.system || "all").toString();
+    let candidates = [];
 
-app.post("/api/preguntar", async (req, res) => {
-  if (!clinicalCaseData?.respuestas) {
-    return res.status(500).json({
-      respuestas: ["Error: no hay datos del caso."],
-    });
-  }
-
-  const { pregunta } = req.body || {};
-  if (!pregunta || !String(pregunta).trim()) {
-    return res.status(400).json({ respuestas: ["Debe enviar una pregunta."] });
-  }
-
-  const subQs = splitQuestions(pregunta);
-  const out = [];
-
-  for (const q of subQs) {
-    let ans = findBestAnswer(q);
-
-    if (!ans) {
-      // Si no hay respuesta convincente local → intentamos Gemini
-      const ai = await callGeminiAPI(q);
-      ans = ai || clinicalCaseData.desconocido || "No entendí tu pregunta, ¿podés reformularla?";
+    if (!fs.existsSync(BASE_CASES_PATH)) {
+      return res.status(500).json({ error: "No existe la carpeta casos_basicos en el servidor." });
     }
 
-    out.push(ans);
-  }
+    if (system === "all" || system === "todos") {
+      candidates = getAllCasesList();
+    } else {
+      const sysPath = path.join(BASE_CASES_PATH, system);
+      if (!fs.existsSync(sysPath) || !fs.statSync(sysPath).isDirectory()) {
+        return res.status(400).json({ error: "Sistema solicitado no existe." });
+      }
+      const files = fs.readdirSync(sysPath).filter(f => f.endsWith(".json"));
+      candidates = files.map(f => ({ caseId: `${system}/${f}`, casePath: path.join(sysPath, f) }));
+    }
 
-  res.json({ respuestas: out });
+    if (!candidates.length) return res.status(404).json({ error: "No hay casos para ese sistema." });
+
+    const chosen = candidates[Math.floor(Math.random() * candidates.length)];
+    const caseLoaded = loadCase(chosen.caseId, chosen.casePath);
+
+    return res.json({
+      casoId: chosen.caseId,
+      presentacion: caseLoaded.data.presentacion || caseLoaded.data.presentacion_inicio || "Caso sin presentación",
+      metadata: caseLoaded.data.metadata || { sistema: system },
+    });
+  } catch (e) {
+    console.error(e);
+    res.status(500).json({ error: "Error al seleccionar el caso." });
+  }
 });
 
-// ----- Evaluación: diagnóstico y tratamiento -----
+// POST /api/preguntar  { pregunta, caseId }
+app.post("/api/preguntar", async (req, res) => {
+  try {
+    const { pregunta, caseId } = req.body || {};
+    if (!pregunta) return res.status(400).json({ respuestas: ["Falta campo 'pregunta'"] });
+    if (!caseId) return res.status(400).json({ respuestas: ["Falta 'caseId'. Primero obtené /api/caso para recibir caseId."] });
+
+    // cargar caso si no está en memoria
+    const [systemPart, filePart] = caseId.split("/"); // aproximado
+    const casePathGuess = path.join(BASE_CASES_PATH, systemPart, filePart);
+    if (!loadedCases[caseId]) {
+      if (!fs.existsSync(casePathGuess)) {
+        return res.status(404).json({ respuestas: ["Caso no encontrado en servidor"] });
+      }
+      loadCase(caseId, casePathGuess);
+    }
+    const caseObj = loadedCases[caseId];
+    if (!caseObj) return res.status(500).json({ respuestas: ["Error interno: no se pudo cargar el caso"] });
+
+    const subQs = splitQuestions(pregunta);
+    const out = [];
+
+    for (const q of subQs) {
+      let ans = findBestAnswerForCase(q, caseObj);
+      if (!ans) {
+        // fallback a Gemini si disponible
+        const ai = await callGeminiAPI(q, caseObj.data);
+        ans = ai || caseObj.data.desconocido || "No entendí tu pregunta, ¿podés reformularla?";
+      }
+      out.push(ans);
+    }
+
+    return res.json({ respuestas: out });
+  } catch (e) {
+    console.error("POST /api/preguntar error:", e);
+    res.status(500).json({ respuestas: ["⚠️ Error del servidor al procesar la pregunta."] });
+  }
+});
+
+// POST /api/evaluar { diagnostico, tratamiento, caseId }
 app.post("/api/evaluar", (req, res) => {
-  const ev = clinicalCaseData?.evaluacion || {};
-  const { diagnostico: diagUser, tratamiento: ttoUser } = req.body || {};
+  try {
+    const { diagnostico, tratamiento, caseId } = req.body || {};
+    if (!caseId) return res.status(400).json({ error: "Falta caseId" });
 
-  const diagEsperado = Array.isArray(ev.diagnostico_presuntivo) ? ev.diagnostico_presuntivo : [];
-  const ttoEsperado = Array.isArray(ev.tratamiento_inicial_esperado) ? ev.tratamiento_inicial_esperado : [];
+    // si no está cargado, intentar cargar
+    const [systemPart, filePart] = caseId.split("/");
+    const casePathGuess = path.join(BASE_CASES_PATH, systemPart, filePart);
+    if (!loadedCases[caseId]) {
+      if (!fs.existsSync(casePathGuess)) {
+        return res.status(404).json({ error: "Caso no encontrado" });
+      }
+      loadCase(caseId, casePathGuess);
+    }
+    const caseObj = loadedCases[caseId];
+    if (!caseObj) return res.status(500).json({ error: "Error interno" });
 
-  const diag = evaluateDiagnosis(diagUser || "", diagEsperado);
-  const tto = evaluateTreatment(ttoUser || "", ttoEsperado);
+    const ev = caseObj.data.evaluacion || {};
+    const diagEsperado = Array.isArray(ev.diagnostico_presuntivo) ? ev.diagnostico_presuntivo : [];
+    const ttoEsperado = Array.isArray(ev.tratamiento_inicial_esperado) ? ev.tratamiento_inicial_esperado : [];
 
-  // Ponderación: 60% diagnóstico, 40% tratamiento
-  const scoreDiag = diag.correcto ? 1 : Math.min(1, Math.max(0, diag.similitud));
-  const total = Number((0.6 * scoreDiag + 0.4 * tto.puntaje).toFixed(2));
+    const diag = evaluateDiagnosis(diagnostico || "", diagEsperado);
+    const tto = evaluateTreatment(tratamiento || "", ttoEsperado);
 
-  const feedback = [];
-  if (diag.correcto) {
-    feedback.push(`✅ Diagnóstico: correcto (${diag.referencia}).`);
-  } else {
-    feedback.push(`❗Diagnóstico: no coincide con el esperado.`);
+    const scoreDiag = diag.correcto ? 1 : Math.min(1, Math.max(0, diag.similitud));
+    const total = Number((0.6 * scoreDiag + 0.4 * tto.puntaje).toFixed(2));
+
+    const feedback = [];
+    if (diag.correcto) feedback.push(`✅ Diagnóstico: correcto (${diag.referencia}).`);
+    else feedback.push(`❗Diagnóstico: no coincide con el esperado. Mejor aproximación: ${diag.referencia || "—"}.`);
+
+    if (tto.aciertos.length) feedback.push(`✅ Tratamiento: incluido → ${tto.aciertos.join(", ")}.`);
+    if (tto.faltantes.length) feedback.push(`🧩 Faltó mencionar → ${tto.faltantes.join(", ")}.`);
+    if (tto.extras.length) feedback.push(`ℹ️ Ítems no esperados → ${tto.extras.join(", ")}.`);
+
+    return res.json({
+      puntaje: {
+        diagnostico: Number((scoreDiag * 100).toFixed(0)),
+        tratamiento: Number((tto.puntaje * 100).toFixed(0)),
+        total: Number((total * 100).toFixed(0)),
+      },
+      diagnostico: diag,
+      tratamiento: tto,
+      feedback,
+    });
+  } catch (e) {
+    console.error("POST /api/evaluar error:", e);
+    res.status(500).json({ error: "Error al evaluar" });
   }
-  if (tto.aciertos.length) {
-    feedback.push(`✅ Tratamiento: bien incluido → ${tto.aciertos.join(", ")}.`);
-  }
-  if (tto.faltantes.length) {
-    feedback.push(`🧩 Te faltó mencionar → ${tto.faltantes.join(", ")}.`);
-  }
-  if (tto.extras.length) {
-    feedback.push(`ℹ️ Ítems no esperados → ${tto.extras.join(", ")}.`);
-  }
-
-  res.json({
-    puntaje: {
-      diagnostico: Number((scoreDiag * 100).toFixed(0)),
-      tratamiento: Number((tto.puntaje * 100).toFixed(0)),
-      total: Number((total * 100).toFixed(0)),
-    },
-    diagnostico: diag,
-    tratamiento: tto,
-    feedback,
-  });
 });
 
-// =========================
-//  START
-// =========================
+// Arrancar servidor
 app.listen(PORT, () => {
   console.log(`✅ API lista en http://localhost:${PORT}`);
 });
