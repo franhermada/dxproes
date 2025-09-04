@@ -107,7 +107,7 @@ export default function App() {
             <li>Se le presentará un paciente al usuario, el cual deberá realizar una completa anamnesis basada en el motivo de consulta.</li>
             <li>Una vez considere que la anamnesis está finalizada, deberá pasar al examen físico donde deberá detallar qué maniobra realiza (Inspección visual, auscultación cardíaca, auscultación pulmonar, palpación, etc).</li>
             <li>Cuando el examen físico esté finalizado, continuará con los exámenes complementarios. En la versión básica, el sistema arrojará directamente el resultado del estudio solicitado; mientras que en la versión avanzada, el sistema proporcionará el estudio solicitado y el usuario deberá analizar si se hallan anomalías.</li>
-            <li>Finalmente, en base a la anamnesis, el examen físico y los estudios complementarios, el usuario deberá dar un diagnóstico presuntivo del paciente. En la versión avanzada, también se agregará tratamiento (tanto farmacológico, como no farmacológico).</li>
+            <li>Finalmente, en base a la anamnesis, el examen físico y los estudios complementarios, el usuario deberá pulsar en "finalizar caso" y dar un diagnostico presuntivo. En la versión avanzada, también se agregará tratamiento.</li>
           </ol>
         </div>
       )}
@@ -115,8 +115,7 @@ export default function App() {
       {section === "casos-basicos" && (
         <div className="section card">
           <h2>Casos Básicos</h2>
-          <p>Casos de baja complejidad con resultado directo de los estudios complementarios solicitados.</p>
-
+       
           <div className="chat-wrapper">
             <div className="chat-card">
               <div className="chat-header">
@@ -153,7 +152,7 @@ export default function App() {
           <h2>Casos Avanzados</h2>
           <p>
             Casos de mayor complejidad, donde el usuario deberá hacer la interpretación de los estudios complementarios
-            por su propia cuenta.
+            por su propia cuenta. Sección aún en desarrollo.
           </p>
         </div>
       )}
@@ -161,7 +160,7 @@ export default function App() {
       {section === "contacto" && (
         <div className="section card">
           <h2>Contacto</h2>
-          <p>Escribinos a <b>dxproes@gmail.com</b></p>
+          <p>Ante dudas, consultas, recomendaciones o aportes de casos clínicos, escribinos a <b>dxproes@gmail.com</b></p>
         </div>
       )}
 
@@ -169,7 +168,7 @@ export default function App() {
         <div className="section card">
           <h2>Colaborar con DxPro</h2>
           <p>
-            DxPro es un proyecto <b>100% gratuito</b>, desarrollado para estudiantes de Medicina y Enfermería.
+            DxPro es un proyecto <b>100% gratuito</b>, desarrollado por y para estudiantes de Medicina y Enfermería.
             No tiene fines de lucro: todo el contenido es libre y abierto.
           </p>
           <p>
