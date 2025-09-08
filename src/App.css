@@ -338,3 +338,16 @@
   background: #003366;
   transform: scale(0.97);
 }
+.inicio-logo-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 30px; /* separación entre los logos */
+  margin-top: 20px;
+}
+
+.inicio-logo {
+  width: 150px;
+  height: auto;
+  object-fit: contain;
+}
