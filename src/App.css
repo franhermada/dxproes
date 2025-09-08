@@ -357,3 +357,34 @@
   max-height: 120px; 
   object-fit: contain;
 }
+.finalizar-btn {
+  background: #004080;
+  color: white;
+  border: none;
+  padding: 10px 18px;
+  border-radius: 8px;
+  font-size: 16px;
+  cursor: pointer;
+  margin: 15px 0;
+}
+
+.finalizar-btn:hover {
+  background: #0066cc;
+}
+
+.evaluacion-form, .evaluacion-resultado {
+  background: #f0f6ff;
+  border: 1px solid #cce;
+  border-radius: 10px;
+  padding: 20px;
+  margin-top: 20px;
+}
+
+.evaluacion-form input,
+.evaluacion-form textarea {
+  width: 100%;
+  padding: 8px;
+  margin: 10px 0;
+  border: 1px solid #aaa;
+  border-radius: 6px;
+}
