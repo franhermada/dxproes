@@ -18,7 +18,14 @@ export default function App() {
 
   const [section, setSection] = useState("inicio");
   const [selectedSystem, setSelectedSystem] = useState(null);
-  const [caseId, setCaseId] = useState(null); // ⬅️ nuevo estado para guardar el caseId
+  const [caseId, setCaseId] = useState(null);
+  const [caseData, setCaseData] = useState(null);
+
+  // Estados para evaluación
+  const [showEvaluation, setShowEvaluation] = useState(false);
+  const [diagnosticoInput, setDiagnosticoInput] = useState("");
+  const [tratamientoInput, setTratamientoInput] = useState("");
+  const [evaluationResult, setEvaluationResult] = useState(null);
 
   const BACKEND_URL = "https://dxproes-backend.onrender.com";
 
@@ -38,7 +45,8 @@ export default function App() {
               : `?system=${encodeURIComponent(selectedSystem)}`;
           const res = await fetch(`${BACKEND_URL}/api/caso${qs}`);
           const data = await res.json();
-          setCaseId(data.casoId); // ⬅️ guardar el caseId
+          setCaseId(data.casoId);
+          setCaseData(data);
           const presentacion = data.presentacion || data.respuesta;
           setMessages([{ texto: presentacion, autor: "bot" }]);
         } catch {
@@ -49,8 +57,11 @@ export default function App() {
       };
       obtenerCaso();
     } else {
-      setMessages([]); // limpiar mensajes si cambio de sección o deselecciono sistema
-      setCaseId(null); // limpiar caseId
+      setMessages([]);
+      setCaseId(null);
+      setCaseData(null);
+      setShowEvaluation(false);
+      setEvaluationResult(null);
     }
   }, [section, selectedSystem]);
 
@@ -66,7 +77,7 @@ export default function App() {
       const respuesta = await fetch(`${BACKEND_URL}/api/preguntar`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ pregunta, caseId }), // ⬅️ enviar también caseId
+        body: JSON.stringify({ pregunta, caseId }),
       });
       const data = await respuesta.json();
 
@@ -96,6 +107,33 @@ export default function App() {
     setSelectedSystem(null);
     setMessages([]);
     setCaseId(null);
+    setCaseData(null);
+    setShowEvaluation(false);
+    setEvaluationResult(null);
+  };
+
+  // Evaluar respuestas
+  const handleEvaluation = () => {
+    if (!caseData || !caseData.evaluacion) return;
+
+    const diagnosticosCorrectos = caseData.evaluacion.diagnostico_presuntivo.map(d => d.toLowerCase());
+    const tratamientosCorrectos = caseData.evaluacion.tratamiento_inicial_esperado.map(t => t.toLowerCase());
+
+    const diagnosticoUser = diagnosticoInput.trim().toLowerCase();
+    const tratamientosUser = tratamientoInput.split(",").map(t => t.trim().toLowerCase());
+
+    const diagnosticoOk = diagnosticosCorrectos.includes(diagnosticoUser);
+
+    const correctos = tratamientosUser.filter(t => tratamientosCorrectos.includes(t));
+    const faltantes = tratamientosCorrectos.filter(t => !tratamientosUser.includes(t));
+    const incorrectos = tratamientosUser.filter(t => !tratamientosCorrectos.includes(t));
+
+    setEvaluationResult({
+      diagnosticoOk,
+      correctos,
+      faltantes,
+      incorrectos,
+    });
   };
 
   return (
@@ -143,8 +181,8 @@ export default function App() {
             del Centro de la Provincia de Buenos Aires.
           </p>
           <div className="inicio-logo-container">
-          <img src="/DxPro.png" alt="DxPro Logo" className="inicio-logo" />
-          <img src="/facultad.png" alt="Facultad Logo" className="inicio-logo facultad" />
+            <img src="/DxPro.png" alt="DxPro Logo" className="inicio-logo" />
+            <img src="/facultad.png" alt="Facultad Logo" className="inicio-logo facultad" />
           </div>
         </div>
       )}
@@ -153,28 +191,10 @@ export default function App() {
         <div className="section card">
           <h2>Tutorial</h2>
           <ol className="tutorial-list">
-            <li>
-              Se le presentará un paciente al usuario, el cual deberá realizar una
-              completa anamnesis basada en el motivo de consulta.
-            </li>
-            <li>
-              Una vez considere que la anamnesis está finalizada, deberá pasar al
-              examen físico donde deberá detallar qué maniobra realiza (Inspección
-              visual, auscultación cardíaca, auscultación pulmonar, palpación, etc).
-            </li>
-            <li>
-              Cuando el examen físico esté finalizado, continuará con los exámenes
-              complementarios. En la versión básica, el sistema arrojará
-              directamente el resultado del estudio solicitado; mientras que en la
-              versión avanzada, el sistema proporcionará el estudio solicitado y el
-              usuario deberá analizar si se hallan anomalías.
-            </li>
-            <li>
-              Finalmente, en base a la anamnesis, el examen físico y los estudios
-              complementarios, el usuario deberá pulsar en "finalizar caso" y dar un
-              diagnostico presuntivo. En la versión avanzada, también se agregará
-              tratamiento.
-            </li>
+            <li>Se le presentará un paciente, deberá realizar una completa anamnesis basada en el motivo de consulta.</li>
+            <li>Una vez considere que la anamnesis está finalizada, deberá pasar al examen físico, describiendo que maniobra realiza (ej: auscultacion cardiaca)</li>
+            <li>Cuando el examen físico esté finalizado, continuará con los exámenes complementarios, mediante la misma lógica que en el examen fisico, describiendo que estudio solicita. En los casos básicos, el sistema informará directamente el resultado del estudio; en los casos avanzados, el sistema devolverá el estudio y el usuario deberá interpretarlo.</li>
+            <li>Finalmente, en base a la anamnesis, el examen físico y los estudios complementarios, el usuario deberá pulsar en "Finalizar caso", donde se abrirá una pestaña donde deberá dar un diagnostico presuntivo y un tratamiento.</li>
           </ol>
         </div>
       )}
@@ -218,16 +238,71 @@ export default function App() {
                   <div ref={chatEndRef} />
                 </div>
 
-                <div className="input-area">
-                  <input
-                    type="text"
-                    placeholder="Escribe tu pregunta al paciente..."
-                    value={input}
-                    onChange={(e) => setInput(e.target.value)}
-                    onKeyDown={(e) => e.key === "Enter" && handleSendMessage()}
-                  />
-                  <button onClick={handleSendMessage}>Enviar</button>
-                </div>
+                {!showEvaluation && !evaluationResult && (
+                  <div className="input-area">
+                    <input
+                      type="text"
+                      placeholder="Escribe tu pregunta al paciente..."
+                      value={input}
+                      onChange={(e) => setInput(e.target.value)}
+                      onKeyDown={(e) => e.key === "Enter" && handleSendMessage()}
+                    />
+                    <button onClick={handleSendMessage}>Enviar</button>
+                  </div>
+                )}
+
+                {/* Botón Finalizar Caso */}
+                {caseData && !showEvaluation && !evaluationResult && (
+                  <button 
+                    className="finalizar-btn" 
+                    onClick={() => setShowEvaluation(true)}
+                  >
+                    Finalizar Caso
+                  </button>
+                )}
+
+                {/* Formulario Evaluación */}
+                {showEvaluation && !evaluationResult && (
+                  <div className="evaluacion-form">
+                    <h3>Evaluación del Caso</h3>
+                    <label>Diagnóstico Presuntivo:</label>
+                    <input 
+                      type="text" 
+                      value={diagnosticoInput} 
+                      onChange={(e) => setDiagnosticoInput(e.target.value)} 
+                      placeholder="Ej: Infarto agudo de miocardio"
+                    />
+                    <label>Tratamiento Inicial:</label>
+                    <textarea
+                      rows="3"
+                      value={tratamientoInput}
+                      onChange={(e) => setTratamientoInput(e.target.value)}
+                      placeholder="Ej: Aspirina, oxígeno, monitoreo..."
+                    />
+                    <button onClick={handleEvaluation}>Enviar</button>
+                  </div>
+                )}
+
+                {/* Resultados Evaluación */}
+                {evaluationResult && (
+                  <div className="evaluacion-resultado">
+                    <h3>Resultados</h3>
+                    <p><strong>Diagnóstico:</strong> {evaluationResult.diagnosticoOk ? "✅ Correcto" : "❌ Incorrecto"}</p>
+                    <p><strong>Tratamiento:</strong></p>
+                    <ul>
+                      {evaluationResult.correctos.length > 0 && (
+                        <li>✅ Correctos: {evaluationResult.correctos.join(", ")}</li>
+                      )}
+                      {evaluationResult.faltantes.length > 0 && (
+                        <li>⚠️ Faltaron: {evaluationResult.faltantes.join(", ")}</li>
+                      )}
+                      {evaluationResult.incorrectos.length > 0 && (
+                        <li>❌ Incorrectos: {evaluationResult.incorrectos.join(", ")}</li>
+                      )}
+                    </ul>
+                    <button onClick={handleBackToSystems}>Volver a sistemas</button>
+                  </div>
+                )}
               </div>
             </div>
           )}
@@ -237,36 +312,21 @@ export default function App() {
       {section === "casos-avanzados" && (
         <div className="section card">
           <h2>Casos Avanzados</h2>
-          <p>
-            Casos de mayor complejidad, donde el usuario deberá hacer la
-            interpretación de los estudios complementarios por su propia cuenta.
-            Sección aún en desarrollo.
-          </p>
+          <p>Casos de mayor complejidad, donde el usuario deberá hacer la interpretación de los estudios complementarios...</p>
         </div>
       )}
 
       {section === "contacto" && (
         <div className="section card">
           <h2>Contacto</h2>
-          <p>
-            Ante dudas, consultas, recomendaciones o aportes de casos clínicos,
-            escribinos a <b>dxproes@gmail.com</b>
-          </p>
+          <p>Ante dudas o consultas, escribinos a <b>dxproes@gmail.com</b></p>
         </div>
       )}
 
       {section === "colaborar" && (
         <div className="section card">
           <h2>Colaborar con DxPro</h2>
-          <p>
-            DxPro es un proyecto <b>100% gratuito</b>, desarrollado por y para
-            estudiantes de Medicina y Enfermería. No tiene fines de lucro: todo el
-            contenido es libre y abierto.
-          </p>
-          <p>
-            Si te resulta útil y querés apoyar el mantenimiento y el desarrollo de
-            nuevos casos clínicos, podés colaborar invitandome un cafecito ☕
-          </p>
+          <p>DxPro es un proyecto <b>100% gratuito</b>... </p>
           <a
             href="https://cafecito.app/dxproes"
             target="_blank"
