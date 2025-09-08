@@ -14,7 +14,7 @@
       "respuesta": "Vine porque me duele el pecho."
     },
     "inicio": {
-      "variantes": ["cuando empezo", "desde cuando", "hace cuanto", "cuando arranco"],
+      "variantes": ["cuando empezo el dolor", "desde cuando duele", "hace cuanto te duele", "cuando arranco el dolor"],
       "respuesta": "El dolor empezó hace 2 horas."
     },
     "contexto_inicio": {
@@ -65,7 +65,6 @@
       "variantes": ["como te sentis ahora", "estado actual", "como estas ahora", "te sentis igual"],
       "respuesta": "Me sigo sintiendo mal, con dolor fuerte en el pecho y un poco de falta de aire."
     },
-
     "antecedentes": {
       "variantes": ["antecedentes", "tenes enfermedades", "alguna enfermedad", "sos hipertenso"],
       "respuesta": "Tengo hipertensión hace años y colesterol alto."
@@ -95,20 +94,19 @@
       "respuesta": "Tomo enalapril para la presión."
     },
     "tiempo_medicacion": {
-      "variantes": ["hace cuanto tomas la medicacion", "desde cuando tomas enalapril", "tiempo medicacion", "tratamiento antihipertensivo hace cuanto"],
+      "variantes": ["hace cuanto tomas enalapril", "desde cuando tomas enalapril", "tratamiento antihipertensivo hace cuanto", "tiempo enalapril"],
       "respuesta": "Lo tomo desde hace unos 5 años, cuando me diagnosticaron hipertensión."
     },
     "familiares": {
       "variantes": ["antecedentes familiares", "tu familia tuvo algo", "familia"],
       "respuesta": "Mi papá falleció de un infarto a los 60 años."
     },
-
     "inspeccion_general": {
       "variantes": ["aspecto fisico", "inspeccion visual", "como se ve", "estado general", "como lo ves", "exploracion general"],
       "respuesta": "De aspecto ansioso, diaforético, consciente y orientado."
     },
     "signos_vitales": {
-      "variantes": ["signos vitales"],
+      "variantes": ["signos vitales", "constantes vitales", "tension y pulso"],
       "respuesta": "TA 150/95 mmHg, FC 95 lpm, FR 22 rpm, SatO2 92%, Temp 37.2°C."
     },
     "examen_cardiovascular": {
@@ -119,7 +117,6 @@
       "variantes": ["pulmones", "examen respiratorio", "auscultacion pulmonar", "respiracion"],
       "respuesta": "Murmullo vesicular conservado, sin ruidos agregados."
     },
-
     "laboratorio": {
       "variantes": ["analisis", "laboratorio", "analitica", "sangre"],
       "respuesta": "Troponina ultrasensible elevada (0.8 ng/mL), colesterol total 250 mg/dL, glucemia 110 mg/dL."
@@ -131,9 +128,9 @@
     "radiografia": {
       "variantes": ["rx", "radiografia", "placa de torax"],
       "respuesta": "Radiografía de tórax sin alteraciones significativas."
-    },
-
-    "evaluacion": {
+    }
+  },
+  "evaluacion": {
     "diagnostico_presuntivo": ["Infarto agudo de miocardio", "IAM"],
     "tratamiento_inicial_esperado": [
       "Aspirina",
@@ -144,5 +141,4 @@
     ]
   },
   "desconocido": "No entendí tu pregunta, ¿podés reformularla?"
-  }
 }
