@@ -143,7 +143,8 @@ export default function App() {
             del Centro de la Provincia de Buenos Aires.
           </p>
           <div className="inicio-logo-container">
-            <img src="/DxPro.png" alt="DxPro Logo" className="inicio-logo" />
+          <img src="/DxPro.png" alt="DxPro Logo" className="inicio-logo" />
+          <img src="/facultad.png" alt="Facultad Logo" className="inicio-logo" />
           </div>
         </div>
       )}
