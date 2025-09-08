@@ -261,27 +261,35 @@ export default function App() {
                   </button>
                 )}
 
-                {/* Formulario Evaluación */}
                 {showEvaluation && !evaluationResult && (
-                  <div className="evaluacion-form">
-                    <h3>Evaluación del Caso</h3>
-                    <label>Diagnóstico Presuntivo:</label>
-                    <input 
-                      type="text" 
-                      value={diagnosticoInput} 
-                      onChange={(e) => setDiagnosticoInput(e.target.value)} 
-                      placeholder="Ej: Infarto agudo de miocardio"
-                    />
-                    <label>Tratamiento Inicial:</label>
-                    <textarea
-                      rows="3"
-                      value={tratamientoInput}
-                      onChange={(e) => setTratamientoInput(e.target.value)}
-                      placeholder="Ej: Aspirina, oxígeno, monitoreo..."
-                    />
-                    <button onClick={handleEvaluation}>Enviar</button>
-                  </div>
-                )}
+  <div className="evaluacion-form">
+    <h3>Evaluación del Caso</h3>
+    <form 
+      onSubmit={(e) => {
+        e.preventDefault(); // evita refrescar la página
+        handleEvaluation();
+      }}
+    >
+      <label>Diagnóstico Presuntivo:</label>
+      <input 
+        type="text" 
+        value={diagnosticoInput} 
+        onChange={(e) => setDiagnosticoInput(e.target.value)} 
+        placeholder="Coloque aquí su diagnóstico..."
+      />
+
+      <label>Tratamiento Inicial:</label>
+      <textarea
+        rows="3"
+        value={tratamientoInput}
+        onChange={(e) => setTratamientoInput(e.target.value)}
+        placeholder="Coloque aquí los tratamientos separados por comas..."
+      />
+
+      <button type="submit">Enviar</button>
+    </form>
+  </div>
+)}
 
                 {/* Resultados Evaluación */}
                 {evaluationResult && (
