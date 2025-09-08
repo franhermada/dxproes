@@ -351,3 +351,9 @@
   height: auto;
   object-fit: contain;
 }
+/* Ajuste especial para el logo de la facultad */
+.inicio-logo.facultad {
+  width: 220px;   /* más grande que el logo de DxPro */
+  max-height: 120px; 
+  object-fit: contain;
+}
