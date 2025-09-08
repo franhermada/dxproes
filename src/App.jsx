@@ -320,7 +320,8 @@ export default function App() {
       {section === "casos-avanzados" && (
         <div className="section card">
           <h2>Casos Avanzados</h2>
-          <p>Casos de mayor complejidad, donde el usuario deberá hacer la interpretación de los estudios complementarios...</p>
+          <p>Casos de mayor complejidad, donde el usuario deberá hacer la interpretación de los estudios complementarios...
+          sección en desarrollo</p>
         </div>
       )}
 
@@ -334,7 +335,17 @@ export default function App() {
       {section === "colaborar" && (
         <div className="section card">
           <h2>Colaborar con DxPro</h2>
-          <p>DxPro es un proyecto <b>100% gratuito</b>... </p>
+    <p>
+      DxPro es un proyecto <b>100% gratuito</b>, pensado para que estudiantes de
+      Medicina y Enfermería puedan practicar y mejorar sus habilidades clínicas.
+      Si te gusta la plataforma y querés apoyarnos, podés colaborar con lo que 
+      vos quieras a través de Cafecito ☕. 
+    </p>
+    <p>
+      Tu aporte ayuda a mantener los servidores, seguir desarrollando nuevos
+      casos clínicos y agregar más funcionalidades. ¡Cada granito de arena suma
+      un montón! 🙌
+    </p>
           <a
             href="https://cafecito.app/dxproes"
             target="_blank"
