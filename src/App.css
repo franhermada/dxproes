@@ -388,3 +388,21 @@
   border: 1px solid #aaa;
   border-radius: 6px;
 }
+.loading-card {
+  background: rgba(255, 255, 255, 0.9);
+  border: 2px solid #004080;
+  border-radius: 10px;
+  padding: 30px;
+  text-align: center;
+  font-size: 18px;
+  font-weight: bold;
+  color: #004080;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+  animation: pulse 1.5s infinite;
+}
+
+@keyframes pulse {
+  0% { opacity: 1; }
+  50% { opacity: 0.6; }
+  100% { opacity: 1; }
+}
