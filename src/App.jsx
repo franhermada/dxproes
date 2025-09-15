@@ -21,6 +21,9 @@ export default function App() {
   const [caseId, setCaseId] = useState(null);
   const [caseData, setCaseData] = useState(null);
 
+  // Estado de carga para el cartel de espera
+  const [loadingCase, setLoadingCase] = useState(false);
+
   // Estados para evaluación
   const [showEvaluation, setShowEvaluation] = useState(false);
   const [diagnosticoInput, setDiagnosticoInput] = useState("");
@@ -39,6 +42,7 @@ export default function App() {
     if (section === "casos-basicos" && selectedSystem) {
       const obtenerCaso = async () => {
         try {
+          setLoadingCase(true); // <-- comienza la carga
           const qs =
             selectedSystem === "todos"
               ? "?system=all"
@@ -53,6 +57,8 @@ export default function App() {
           setMessages([
             { texto: "⚠️ Error al cargar el caso clínico", autor: "bot" }
           ]);
+        } finally {
+          setLoadingCase(false); // <-- termina la carga
         }
       };
       obtenerCaso();
@@ -62,6 +68,7 @@ export default function App() {
       setCaseData(null);
       setShowEvaluation(false);
       setEvaluationResult(null);
+      setLoadingCase(false);
     }
   }, [section, selectedSystem]);
 
@@ -110,9 +117,10 @@ export default function App() {
     setCaseData(null);
     setShowEvaluation(false);
     setEvaluationResult(null);
+    setLoadingCase(false); // limpiar estado de carga también
   };
 
-  // Evaluar respuestas
+  // Evaluar respuestas (tu lógica actual)
   const handleEvaluation = () => {
     if (!caseData || !caseData.evaluacion) return;
 
@@ -217,6 +225,11 @@ export default function App() {
                   </button>
                 ))}
               </div>
+            </div>
+          ) : loadingCase ? (
+            // <-- CARTEL DE ESPERA (se muestra mientras carga el caso)
+            <div className="loading-card">
+              <p>⏳ Espere mientras cargamos su caso clínico...</p>
             </div>
           ) : (
             <div className="chat-wrapper">
@@ -339,7 +352,7 @@ export default function App() {
       DxPro es un proyecto <b>100% gratuito</b>, pensado para que estudiantes de
       Medicina y Enfermería puedan practicar y mejorar sus habilidades clínicas.
       Si te gusta la plataforma y querés apoyarnos, podés colaborar con lo que 
-      vos quieras a través de Cafecito ☕. 
+      vos quieras a través de Cafecito. 
     </p>
     <p>
       Tu aporte ayuda a mantener los servidores, seguir desarrollando nuevos
