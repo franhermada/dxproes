@@ -190,7 +190,7 @@ export default function App() {
           </p>
           <div className="inicio-logo-container">
             <img src="/DxPro.png" alt="DxPro Logo" className="inicio-logo" />
-            <img src="/facultad.png" alt="Facultad Logo" className="inicio-logo facultad" />
+            <img src="/facultad sin fondo.png" alt="Facultad Logo" className="inicio-logo facultad" />
           </div>
         </div>
       )}
