@@ -127,6 +127,15 @@ export default function App() {
     setFase("anamnesis"); // <<< resetear fase
   };
 
+  // >>> NUEVO: función para avanzar de fase con separador
+  const avanzarFase = (nuevaFase, textoSeparador) => {
+    setFase(nuevaFase);
+    setMessages((prev) => [
+      ...prev,
+      { texto: `--- ${textoSeparador} ---`, autor: "sistema" }
+    ]);
+  };
+
   // Evaluar respuestas (tu lógica actual)
   const handleEvaluation = () => {
     if (!caseData || !caseData.evaluacion) return;
@@ -296,16 +305,24 @@ export default function App() {
                 {caseData && !showEvaluation && !evaluationResult && (
                   <div className="fase-buttons">
                     {fase === "anamnesis" && (
-                      <button onClick={() => setFase("examen")}>Avanzar a Examen Físico</button>
+                      <button onClick={() => avanzarFase("examen", "Inicio del Examen Físico")}>
+                        Avanzar a Examen Físico
+                      </button>
                     )}
                     {fase === "examen" && (
-                      <button onClick={() => setFase("presuntivos")}>Avanzar a Diagnósticos Presuntivos</button>
+                      <button onClick={() => avanzarFase("presuntivos", "Diagnósticos Presuntivos")}>
+                        Avanzar a Diagnósticos Presuntivos
+                      </button>
                     )}
                     {fase === "presuntivos" && (
-                      <button onClick={() => setFase("complementarios")}>Avanzar a Estudios Complementarios</button>
+                      <button onClick={() => avanzarFase("complementarios", "Estudios Complementarios")}>
+                        Avanzar a Estudios Complementarios
+                      </button>
                     )}
                     {fase === "complementarios" && (
-                      <button onClick={() => setFase("definitivo")}>Avanzar a Diagnóstico Definitivo</button>
+                      <button onClick={() => avanzarFase("definitivo", "Diagnóstico Definitivo")}>
+                        Avanzar a Diagnóstico Definitivo
+                      </button>
                     )}
                     {fase === "definitivo" && (
                       <button 
