@@ -30,6 +30,10 @@ export default function App() {
   const [tratamientoInput, setTratamientoInput] = useState("");
   const [evaluationResult, setEvaluationResult] = useState(null);
 
+  // >>> NUEVO: estado de la fase del caso
+  const [fase, setFase] = useState("anamnesis");
+  // fases: anamnesis → examen → presuntivos → complementarios → definitivo
+
   const BACKEND_URL = "https://dxproes-backend.onrender.com";
 
   // Auto-scroll
@@ -53,6 +57,7 @@ export default function App() {
           setCaseData(data);
           const presentacion = data.presentacion || data.respuesta;
           setMessages([{ texto: presentacion, autor: "bot" }]);
+          setFase("anamnesis"); // <<< arrancar siempre en anamnesis
         } catch {
           setMessages([
             { texto: "⚠️ Error al cargar el caso clínico", autor: "bot" }
@@ -69,6 +74,7 @@ export default function App() {
       setShowEvaluation(false);
       setEvaluationResult(null);
       setLoadingCase(false);
+      setFase("anamnesis"); // <<< resetear fase
     }
   }, [section, selectedSystem]);
 
@@ -118,6 +124,7 @@ export default function App() {
     setShowEvaluation(false);
     setEvaluationResult(null);
     setLoadingCase(false); // limpiar estado de carga también
+    setFase("anamnesis"); // <<< resetear fase
   };
 
   // Evaluar respuestas (tu lógica actual)
@@ -196,16 +203,37 @@ export default function App() {
       )}
 
       {section === "tutorial" && (
-        <div className="section card">
-          <h2>Tutorial</h2>
-          <ol className="tutorial-list">
-            <li>Se le presentará un paciente, deberá realizar una completa anamnesis basada en el motivo de consulta.</li>
-            <li>Una vez considere que la anamnesis está finalizada, deberá pasar al examen físico, describiendo que maniobra realiza (ej: auscultacion cardiaca)</li>
-            <li>Cuando el examen físico esté finalizado, continuará con los exámenes complementarios, mediante la misma lógica que en el examen fisico, describiendo que estudio solicita. En los casos básicos, el sistema informará directamente el resultado del estudio; en los casos avanzados, el sistema devolverá el estudio y el usuario deberá interpretarlo.</li>
-            <li>Finalmente, en base a la anamnesis, el examen físico y los estudios complementarios, el usuario deberá pulsar en "Finalizar caso", donde se abrirá una pestaña donde deberá dar un diagnostico presuntivo y un tratamiento.</li>
-          </ol>
-        </div>
-      )}
+  <div className="section card">
+    <h2>Tutorial</h2>
+    <ol className="tutorial-list">
+      <li>
+        Se le presentará un paciente con un motivo de consulta inicial. 
+        El primer paso será realizar una anamnesis completa, formulando preguntas que considere relevantes. 
+        Cuando crea que la anamnesis está finalizada, deberá pulsar el botón <b>"Avanzar a Examen Físico"</b>.
+      </li>
+      <li>
+        En la fase de examen físico, podrá indicar qué maniobras desea realizar 
+        (ejemplo: auscultación cardíaca, palpación abdominal). 
+        Una vez completada, deberá pulsar el botón <b>"Avanzar a Diagnósticos Presuntivos"</b>.
+      </li>
+      <li>
+        En la etapa de diagnósticos presuntivos, deberá proponer las posibles causas del cuadro clínico en base a la información recogida. 
+        Cuando considere que su lista de diagnósticos es suficiente, deberá pulsar <b>"Avanzar a Estudios Complementarios"</b>.
+      </li>
+      <li>
+        En la fase de estudios complementarios, podrá solicitar los estudios que correspondan a cada diagnóstico presuntivo. 
+        En los casos básicos, el sistema mostrará directamente el resultado textual de cada estudio. 
+        En los casos avanzados, el sistema devolverá únicamente el material (imagen, audio, etc.) y será el usuario quien deba interpretarlo. 
+        Cuando finalice, deberá pulsar <b>"Avanzar a Diagnóstico Definitivo"</b>.
+      </li>
+      <li>
+        Finalmente, en la etapa de diagnóstico definitivo, en base a la anamnesis, el examen físico y los estudios complementarios, 
+        deberá pulsar en <b>"Finalizar caso"</b>. 
+        Allí podrá ingresar su diagnóstico presuntivo principal y el tratamiento inicial que considere adecuado, tras lo cual recibirá una retroalimentación formativa.
+      </li>
+    </ol>
+  </div>
+)}
 
       {section === "casos-basicos" && (
         <div className="section card">
@@ -264,15 +292,32 @@ export default function App() {
                   </div>
                 )}
 
-                {/* Botón Finalizar Caso */}
+                {/* >>> NUEVO BLOQUE DE FLUJO ESTRUCTURADO */}
                 {caseData && !showEvaluation && !evaluationResult && (
-                  <button 
-                    className="finalizar-btn" 
-                    onClick={() => setShowEvaluation(true)}
-                  >
-                    Finalizar Caso
-                  </button>
+                  <div className="fase-buttons">
+                    {fase === "anamnesis" && (
+                      <button onClick={() => setFase("examen")}>Avanzar a Examen Físico</button>
+                    )}
+                    {fase === "examen" && (
+                      <button onClick={() => setFase("presuntivos")}>Avanzar a Diagnósticos Presuntivos</button>
+                    )}
+                    {fase === "presuntivos" && (
+                      <button onClick={() => setFase("complementarios")}>Avanzar a Estudios Complementarios</button>
+                    )}
+                    {fase === "complementarios" && (
+                      <button onClick={() => setFase("definitivo")}>Avanzar a Diagnóstico Definitivo</button>
+                    )}
+                    {fase === "definitivo" && (
+                      <button 
+                        className="finalizar-btn" 
+                        onClick={() => setShowEvaluation(true)}
+                      >
+                        Finalizar Caso
+                      </button>
+                    )}
+                  </div>
                 )}
+                {/* <<< FIN NUEVO BLOQUE */}
 
                 {showEvaluation && !evaluationResult && (
   <div className="evaluacion-form">

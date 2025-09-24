@@ -406,3 +406,32 @@
   50% { opacity: 0.6; }
   100% { opacity: 1; }
 }
+/* --- Botones de avance por fases --- */
+.fase-buttons {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-top: 15px;
+}
+
+.fase-buttons button {
+  background: linear-gradient(45deg, #2563eb, #3b82f6); /* azul moderno */
+  color: #fff;
+  font-weight: bold;
+  font-size: 1rem;
+  padding: 12px 18px;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: transform 0.2s ease, box-shadow 0.2s ease, background 0.3s;
+}
+
+.fase-buttons button:hover {
+  background: linear-gradient(45deg, #1d4ed8, #2563eb);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 14px rgba(0, 0, 0, 0.15);
+}
+
+.fase-buttons button:active {
+  transform: scale(0.97);
+}
