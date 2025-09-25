@@ -32,7 +32,7 @@ export default function App() {
 
   // >>> NUEVO: estado de la fase del caso
   const [fase, setFase] = useState("anamnesis");
-  // fases: anamnesis → examen → presuntivos → complementarios → definitivo
+  // fases: anamnesis → examen → presuntivos → complementarios → finalizar caso
 
   const BACKEND_URL = "https://dxproes-backend.onrender.com";
 
@@ -127,13 +127,16 @@ export default function App() {
     setFase("anamnesis"); // <<< resetear fase
   };
 
-  // >>> NUEVO: función para avanzar de fase con separador
-  const avanzarFase = (nuevaFase, textoSeparador) => {
+  // >>> NUEVO: función para avanzar de fase con separador + mensaje opcional
+  const avanzarFase = (nuevaFase, textoSeparador, mensajeExtra = null) => {
     setFase(nuevaFase);
-    setMessages((prev) => [
-      ...prev,
+    let nuevosMensajes = [
       { texto: `--- ${textoSeparador} ---`, autor: "sistema" }
-    ]);
+    ];
+    if (mensajeExtra) {
+      nuevosMensajes.push({ texto: mensajeExtra, autor: "sistema" });
+    }
+    setMessages((prev) => [...prev, ...nuevosMensajes]);
   };
 
   // Evaluar respuestas (tu lógica actual)
@@ -212,37 +215,37 @@ export default function App() {
       )}
 
       {section === "tutorial" && (
-  <div className="section card">
-    <h2>Tutorial</h2>
-    <ol className="tutorial-list">
-      <li>
-        Se le presentará un paciente con un motivo de consulta inicial. 
-        El primer paso será realizar una anamnesis completa, formulando preguntas que considere relevantes. 
-        Cuando crea que la anamnesis está finalizada, deberá pulsar el botón <b>"Avanzar a Examen Físico"</b>.
-      </li>
-      <li>
-        En la fase de examen físico, podrá indicar qué maniobras desea realizar 
-        (ejemplo: auscultación cardíaca, palpación abdominal). 
-        Una vez completada, deberá pulsar el botón <b>"Avanzar a Diagnósticos Presuntivos"</b>.
-      </li>
-      <li>
-        En la etapa de diagnósticos presuntivos, deberá proponer las posibles causas del cuadro clínico en base a la información recogida. 
-        Cuando considere que su lista de diagnósticos es suficiente, deberá pulsar <b>"Avanzar a Estudios Complementarios"</b>.
-      </li>
-      <li>
-        En la fase de estudios complementarios, podrá solicitar los estudios que correspondan a cada diagnóstico presuntivo. 
-        En los casos básicos, el sistema mostrará directamente el resultado textual de cada estudio. 
-        En los casos avanzados, el sistema devolverá únicamente el material (imagen, audio, etc.) y será el usuario quien deba interpretarlo. 
-        Cuando finalice, deberá pulsar <b>"Avanzar a Diagnóstico Definitivo"</b>.
-      </li>
-      <li>
-        Finalmente, en la etapa de diagnóstico definitivo, en base a la anamnesis, el examen físico y los estudios complementarios, 
-        deberá pulsar en <b>"Finalizar caso"</b>. 
-        Allí podrá ingresar su diagnóstico presuntivo principal y el tratamiento inicial que considere adecuado, tras lo cual recibirá una retroalimentación formativa.
-      </li>
-    </ol>
-  </div>
-)}
+        <div className="section card">
+          <h2>Tutorial</h2>
+          <ol className="tutorial-list">
+            <li>
+              Se le presentará un paciente con un motivo de consulta inicial. 
+              El primer paso será realizar una anamnesis completa, formulando preguntas que considere relevantes. 
+              Cuando crea que la anamnesis está finalizada, deberá pulsar el botón <b>"Avanzar a Examen Físico"</b>.
+            </li>
+            <li>
+              En la fase de examen físico, podrá indicar qué maniobras desea realizar 
+              (ejemplo: auscultación cardíaca, palpación abdominal). 
+              Una vez completada, deberá pulsar el botón <b>"Avanzar a Diagnósticos Diferenciales"</b>.
+            </li>
+            <li>
+              En la etapa de diagnósticos diferenciales, deberá proponer las posibles causas del cuadro clínico en base a la información recogida. 
+              Al avanzar, el sistema le devolverá un mensaje motivador invitándolo a pensar qué estudios solicitaría para confirmar o descartar cada uno. 
+              Luego deberá pulsar <b>"Avanzar a Estudios Complementarios"</b>.
+            </li>
+            <li>
+              En la fase de estudios complementarios, podrá solicitar los estudios que correspondan a cada diagnóstico diferencial. 
+              En los casos básicos, el sistema mostrará directamente el resultado textual de cada estudio. 
+              En los casos avanzados, el sistema devolverá únicamente el material (imagen, audio, etc.) y será el usuario quien deba interpretarlo. 
+              Cuando finalice, deberá pulsar <b>"Finalizar caso"</b>.
+            </li>
+            <li>
+              Finalmente, en la etapa de evaluación, podrá ingresar su diagnóstico principal y el tratamiento inicial que considere adecuado, 
+              tras lo cual recibirá una retroalimentación formativa.
+            </li>
+          </ol>
+        </div>
+      )}
 
       {section === "casos-basicos" && (
         <div className="section card">
@@ -310,21 +313,23 @@ export default function App() {
                       </button>
                     )}
                     {fase === "examen" && (
-                      <button onClick={() => avanzarFase("presuntivos", "Diagnósticos Presuntivos")}>
-                        Avanzar a Diagnósticos Presuntivos
+                      <button onClick={() => avanzarFase(
+                        "presuntivos",
+                        "Diagnósticos Diferenciales",
+                        "Excelente, avancemos. ¿Qué estudios pedirías para confirmar o descartar cada diagnóstico diferencial que planteaste?"
+                      )}>
+                        Avanzar a Diagnósticos Diferenciales
                       </button>
                     )}
                     {fase === "presuntivos" && (
-                      <button onClick={() => avanzarFase("complementarios", "Estudios Complementarios")}>
+                      <button onClick={() => avanzarFase(
+                        "complementarios",
+                        "Estudios Complementarios"
+                      )}>
                         Avanzar a Estudios Complementarios
                       </button>
                     )}
                     {fase === "complementarios" && (
-                      <button onClick={() => avanzarFase("definitivo", "Diagnóstico Definitivo")}>
-                        Avanzar a Diagnóstico Definitivo
-                      </button>
-                    )}
-                    {fase === "definitivo" && (
                       <button 
                         className="finalizar-btn" 
                         onClick={() => setShowEvaluation(true)}
@@ -337,34 +342,34 @@ export default function App() {
                 {/* <<< FIN NUEVO BLOQUE */}
 
                 {showEvaluation && !evaluationResult && (
-  <div className="evaluacion-form">
-    <h3>Evaluación del Caso</h3>
-    <form 
-      onSubmit={(e) => {
-        e.preventDefault(); // evita refrescar la página
-        handleEvaluation();
-      }}
-    >
-      <label>Diagnóstico Presuntivo:</label>
-      <input 
-        type="text" 
-        value={diagnosticoInput} 
-        onChange={(e) => setDiagnosticoInput(e.target.value)} 
-        placeholder="Coloque aquí su diagnóstico..."
-      />
+                  <div className="evaluacion-form">
+                    <h3>Evaluación del Caso</h3>
+                    <form 
+                      onSubmit={(e) => {
+                        e.preventDefault(); // evita refrescar la página
+                        handleEvaluation();
+                      }}
+                    >
+                      <label>Diagnóstico Presuntivo:</label>
+                      <input 
+                        type="text" 
+                        value={diagnosticoInput} 
+                        onChange={(e) => setDiagnosticoInput(e.target.value)} 
+                        placeholder="Coloque aquí su diagnóstico..."
+                      />
 
-      <label>Tratamiento Inicial:</label>
-      <textarea
-        rows="3"
-        value={tratamientoInput}
-        onChange={(e) => setTratamientoInput(e.target.value)}
-        placeholder="Coloque aquí los tratamientos separados por comas..."
-      />
+                      <label>Tratamiento Inicial:</label>
+                      <textarea
+                        rows="3"
+                        value={tratamientoInput}
+                        onChange={(e) => setTratamientoInput(e.target.value)}
+                        placeholder="Coloque aquí los tratamientos separados por comas..."
+                      />
 
-      <button type="submit">Enviar</button>
-    </form>
-  </div>
-)}
+                      <button type="submit">Enviar</button>
+                    </form>
+                  </div>
+                )}
 
                 {/* Resultados Evaluación */}
                 {evaluationResult && (
@@ -393,12 +398,20 @@ export default function App() {
       )}
 
       {section === "casos-avanzados" && (
-        <div className="section card">
-          <h2>Casos Avanzados</h2>
-          <p>Casos de mayor complejidad, donde el usuario deberá hacer la interpretación de los estudios complementarios...
-          sección en desarrollo</p>
-        </div>
-      )}
+  <div className="section card">
+    <h2>Casos Avanzados</h2>
+    <p>
+      Casos de mayor complejidad que requieren un razonamiento clínico más profundo. 
+      Aquí el usuario deberá interpretar directamente los estudios complementarios 
+      (imágenes, audios de auscultación, registros) y tomar decisiones sin que el sistema 
+      brinde explicaciones automáticas. Esta sección busca simular la práctica clínica real.
+    </p>
+    <p style={{ marginTop: "15px", fontStyle: "italic", color: "#555" }}>
+      ⚠️ Sección en desarrollo. Pronto habrá más novedades.
+    </p>
+  </div>
+)}
+
 
       {section === "contacto" && (
         <div className="section card">
@@ -410,17 +423,17 @@ export default function App() {
       {section === "colaborar" && (
         <div className="section card">
           <h2>Colaborar con DxPro</h2>
-    <p>
-      DxPro es un proyecto <b>100% gratuito</b>, pensado para que estudiantes de
-      Medicina y Enfermería puedan practicar y mejorar sus habilidades clínicas.
-      Si te gusta la plataforma y querés apoyarnos, podés colaborar con lo que 
-      vos quieras a través de Cafecito. 
-    </p>
-    <p>
-      Tu aporte ayuda a mantener los servidores, seguir desarrollando nuevos
-      casos clínicos y agregar más funcionalidades. ¡Cada granito de arena suma
-      un montón! 🙌
-    </p>
+          <p>
+            DxPro es un proyecto <b>100% gratuito</b>, pensado para que estudiantes de
+            Medicina y Enfermería puedan practicar y mejorar sus habilidades clínicas.
+            Si te gusta la plataforma y querés apoyarnos, podés colaborar con lo que 
+            vos quieras a través de Cafecito. 
+          </p>
+          <p>
+            Tu aporte ayuda a mantener los servidores, seguir desarrollando nuevos
+            casos clínicos y agregar más funcionalidades. ¡Cada granito de arena suma
+            un montón! 🙌
+          </p>
           <a
             href="https://cafecito.app/dxproes"
             target="_blank"
