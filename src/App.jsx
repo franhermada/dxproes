@@ -406,11 +406,24 @@ export default function App() {
       (imágenes, audios de auscultación, registros) y tomar decisiones sin que el sistema 
       brinde explicaciones automáticas. Esta sección busca simular la práctica clínica real.
     </p>
-    <p style={{ marginTop: "15px", fontStyle: "italic", color: "#555" }}>
+
+    <div 
+      style={{
+        marginTop: "20px",
+        padding: "12px 16px",
+        backgroundColor: "#fff3cd",
+        border: "1px solid #ffeeba",
+        borderRadius: "8px",
+        color: "#856404",
+        fontWeight: "bold",
+        textAlign: "center"
+      }}
+    >
       ⚠️ Sección en desarrollo. Pronto habrá más novedades.
-    </p>
+    </div>
   </div>
 )}
+
 
 
       {section === "contacto" && (
