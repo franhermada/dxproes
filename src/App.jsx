@@ -370,8 +370,8 @@ export default function App() {
                       <button onClick={() => avanzarFase(
                         "presuntivos",
                         "Diagnósticos Diferenciales",
-                        "Excelente, avancemos. ¿Qué estudios pedirías para confirmar o descartar cada diagnóstico diferencial que planteaste?"
-                      )}>
+                        "En base a la información obtenida, ¿cuáles serían tus diagnósticos diferenciales?"
+                        )}>
                         Avanzar a Diagnósticos Diferenciales
                       </button>
                     )}
