@@ -369,8 +369,7 @@ export default function App() {
                     {fase === "examen" && (
                       <button onClick={() => avanzarFase(
                         "presuntivos",
-                        "Diagnósticos Diferenciales",
-                        "En base a la información obtenida, ¿cuáles serían tus diagnósticos diferenciales?"
+                        "Diagnósticos Diferenciales",                        
                         )}>
                         Avanzar a Diagnósticos Diferenciales
                       </button>
