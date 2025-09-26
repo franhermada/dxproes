@@ -78,34 +78,89 @@ export default function App() {
     }
   }, [section, selectedSystem]);
 
-  // >>> NUEVO: función para evaluar diagnósticos diferenciales
+  // -----------------------------------------------------------
+  // Helpers: normalización y separación de entradas del usuario
+  const normalizeText = (s) => {
+    if (!s && s !== "") return "";
+    // normaliza acentos, pasa a minúsculas y elimina caracteres no alfanuméricos (salvo espacios)
+    return String(s)
+      .normalize("NFD")
+      .replace(/[\u0300-\u036f]/g, "")
+      .toLowerCase()
+      .replace(/[^a-z0-9\s]/g, "")
+      .trim();
+  };
+
+  const splitUserEntries = (raw) => {
+    // separa por comas, punto y coma, " y ", saltos de línea
+    if (!raw) return [];
+    return raw
+      .split(/[,;\n]+| y /i)
+      .map((s) => s.trim())
+      .filter(Boolean);
+  };
+  // -----------------------------------------------------------
+
+  // >>> NUEVO: función para evaluar diagnósticos diferenciales (mejorada)
   const evaluarDiferenciales = (entrada) => {
-    if (!caseData || !caseData.evaluacion) return;
+    if (!caseData || !caseData.evaluacion || !Array.isArray(caseData.evaluacion.diagnostico_presuntivo)) return;
 
-    const diferencialesEsperados = caseData.evaluacion.diagnostico_presuntivo.map(dx => dx.toLowerCase());
-    const respuestasUsuario = entrada.toLowerCase().split(",");
+    // normalizamos y unificamos esperados (evitamos duplicados por sinónimos en el JSON)
+    const esperadosRaw = caseData.evaluacion.diagnostico_presuntivo;
+    const esperadosNorm = [];
+    const seen = new Set();
+    for (const e of esperadosRaw) {
+      const n = normalizeText(e);
+      if (!n) continue;
+      if (!seen.has(n)) {
+        seen.add(n);
+        esperadosNorm.push(n);
+      }
+    }
 
-    let aciertos = 0;
-    respuestasUsuario.forEach(resp => {
-      if (diferencialesEsperados.some(dx => resp.trim().includes(dx))) {
-        aciertos++;
+    const userEntries = splitUserEntries(entrada);
+    const matched = new Set();
+
+    userEntries.forEach((entry) => {
+      const en = normalizeText(entry);
+      if (!en) return;
+      // comparamos por substring en ambas direcciones para ser tolerantes
+      for (let i = 0; i < esperadosNorm.length; i++) {
+        if (matched.has(i)) continue;
+        const expected = esperadosNorm[i];
+        if (expected.includes(en) || en.includes(expected)) {
+          matched.add(i);
+          break;
+        }
       }
     });
 
-    if (aciertos >= Math.ceil(diferencialesEsperados.length * 0.6)) {
+    const aciertos = matched.size;
+    const totalEsperados = esperadosNorm.length || 1;
+    const threshold = Math.ceil(totalEsperados * 0.6); // >=60% para feedback positivo
+
+    if (aciertos >= threshold) {
       setMessages((prev) => [
         ...prev,
-        { texto: "Excelente, avancemos. ¿Qué estudios pedirías para confirmar o descartar cada diagnóstico diferencial que planteaste?", autor: "sistema" }
+        {
+          texto:
+            "Excelente, avancemos. ¿Qué estudios pedirías para confirmar o descartar cada diagnóstico diferencial que planteaste?",
+          autor: "sistema"
+        }
       ]);
     } else {
       setMessages((prev) => [
         ...prev,
-        { texto: "Has planteado algunos diagnósticos, pero quizás convendría pensar en otras posibilidades clínicas también.", autor: "sistema" }
+        {
+          texto:
+            "Has planteado algunos diagnósticos, pero quizás convendría pensar en otras posibilidades clínicas también.",
+          autor: "sistema"
+        }
       ]);
     }
   };
 
-  // Enviar mensaje
+  // Enviar mensaje (mejorado: chequeo de fase presuntivos y estudios)
   const handleSendMessage = async () => {
     if (!input.trim()) return;
 
@@ -120,15 +175,64 @@ export default function App() {
     }
 
     // >>> NUEVO: chequeo de estudios complementarios
-    if (fase === "complementarios" && caseData?.respuestas?.estudios) {
-      const estudioSolicitado = Object.keys(caseData.respuestas.estudios).find(e =>
-        pregunta.toLowerCase().includes(e.toLowerCase())
-      );
+    if (fase === "complementarios" && caseData?.respuestas) {
+      // Construimos un mapa de búsqueda: clave (nombre o variante) -> respuesta textual
+      const respuestas = caseData.respuestas || {};
+      const estudiosMap = {};
 
-      if (estudioSolicitado) {
+      // Si existe caseData.respuestas.estudios (forma alternativa), respetarla
+      if (respuestas.estudios && typeof respuestas.estudios === "object") {
+        const estObj = respuestas.estudios;
+        for (const k of Object.keys(estObj)) {
+          const v = estObj[k];
+          if (v && typeof v === "object" && v.respuesta) {
+            estudiosMap[normalizeText(k)] = v.respuesta;
+            if (Array.isArray(v.variantes)) {
+              v.variantes.forEach((varName) => {
+                estudiosMap[normalizeText(varName)] = v.respuesta;
+              });
+            }
+          } else if (typeof v === "string") {
+            estudiosMap[normalizeText(k)] = v;
+          }
+        }
+      }
+
+      // Además agregamos todas las keys de caseData.respuestas (forma que usan muchos JSON de caso)
+      for (const key of Object.keys(respuestas)) {
+        if (key === "estudios") continue; // ya procesado arriba si existía
+        const val = respuestas[key];
+        if (typeof val === "string") {
+          estudiosMap[normalizeText(key)] = val;
+        } else if (val && typeof val === "object") {
+          // si tiene .respuesta y .variantes
+          if (val.respuesta) {
+            estudiosMap[normalizeText(key)] = val.respuesta;
+          }
+          if (Array.isArray(val.variantes)) {
+            val.variantes.forEach((v) => {
+              estudiosMap[normalizeText(v)] = val.respuesta || (typeof val === "string" ? val : "");
+            });
+          }
+        }
+      }
+
+      // Intentamos encontrar una clave que aparezca en la pregunta del usuario (normalizada)
+      const preguntaNorm = normalizeText(pregunta);
+      let encontrado = null;
+      // Buscamos coincidencia por substring (clave en pregunta) o pregunta en clave
+      for (const k of Object.keys(estudiosMap)) {
+        if (!k) continue;
+        if (preguntaNorm.includes(k) || k.includes(preguntaNorm)) {
+          encontrado = k;
+          break;
+        }
+      }
+
+      if (encontrado) {
         setMessages((prev) => [
           ...prev,
-          { texto: caseData.respuestas.estudios[estudioSolicitado], autor: "bot" }
+          { texto: estudiosMap[encontrado], autor: "bot" }
         ]);
       } else {
         setMessages((prev) => [
@@ -139,6 +243,7 @@ export default function App() {
       return;
     }
 
+    // Si no es presuntivos ni complementarios, hacemos la consulta normal al backend
     try {
       const respuesta = await fetch(`${BACKEND_URL}/api/preguntar`, {
         method: "POST",
@@ -192,22 +297,21 @@ export default function App() {
     setMessages((prev) => [...prev, ...nuevosMensajes]);
   };
 
-  // Evaluar respuestas
-  const handleEvaluation = (e) => {
-    e.preventDefault(); // <<< FIX: evitar refresco
+  // Evaluar respuestas (ahora sin evento como parámetro)
+  const handleEvaluation = () => {
     if (!caseData || !caseData.evaluacion) return;
 
-    const diagnosticosCorrectos = caseData.evaluacion.diagnostico_presuntivo.map(d => d.toLowerCase());
-    const tratamientosCorrectos = caseData.evaluacion.tratamiento_inicial_esperado.map(t => t.toLowerCase());
+    const diagnosticosCorrectos = (caseData.evaluacion.diagnostico_presuntivo || []).map(d => normalizeText(d));
+    const tratamientosCorrectos = (caseData.evaluacion.tratamiento_inicial_esperado || []).map(t => normalizeText(t));
 
-    const diagnosticoUser = diagnosticoInput.trim().toLowerCase();
-    const tratamientosUser = tratamientoInput.split(",").map(t => t.trim().toLowerCase());
+    const diagnosticoUser = normalizeText(diagnosticoInput);
+    const tratamientosUser = tratamientoInput.split(",").map(t => normalizeText(t));
 
     const diagnosticoOk = diagnosticosCorrectos.includes(diagnosticoUser);
 
-    const correctos = tratamientosUser.filter(t => tratamientosCorrectos.includes(t));
+    const correctos = tratamientosUser.filter(t => tratamientosCorrectos.includes(t) && t.length > 0);
     const faltantes = tratamientosCorrectos.filter(t => !tratamientosUser.includes(t));
-    const incorrectos = tratamientosUser.filter(t => !tratamientosCorrectos.includes(t));
+    const incorrectos = tratamientosUser.filter(t => !tratamientosCorrectos.includes(t) && t.length > 0);
 
     setEvaluationResult({
       diagnosticoOk,
@@ -254,12 +358,7 @@ export default function App() {
         <div className="section card">
           <h1>Bienvenido a DxPro</h1>
           <p>
-            Un simulador virtual de casos clínicos donde podrás desarrollar tus
-            habilidades clinicas. DxPro surge como parte de un proyecto de
-            investigación sobre el uso de herramientas digitales (como IA) en el
-            desarrollo académico de estudiantes de Medicina y Enfermería, en la
-            Facultad de Ciencias de la Salud perteneciente a la Universidad Nacional
-            del Centro de la Provincia de Buenos Aires.
+            "DxPro es un simulador virtual de casos clínicos diseñado para que puedas poner en práctica y fortalecer tus habilidades clínicas en un entorno interactivo. Forma parte de un proyecto de investigación sobre el uso de herramientas digitales —incluyendo inteligencia artificial— en la formación académica de estudiantes de Medicina y Enfermería. El desarrollo se lleva adelante en la Facultad de Ciencias de la Salud perteneciente a la Universidad Nacional del Centro de la Provincia de Buenos Aires."
           </p>
           <div className="inicio-logo-container">
             <img src="/DxPro.png" alt="DxPro Logo" className="inicio-logo" />
@@ -284,7 +383,7 @@ export default function App() {
             </li>
             <li>
               En la etapa de diagnósticos diferenciales, deberá proponer las posibles causas del cuadro clínico en base a la información recogida. 
-              Al avanzar, el sistema le devolverá un mensaje motivador invitándolo a pensar qué estudios solicitaría para confirmar o descartar cada uno. 
+              Al enviar su listado, el sistema le dará feedback (positivo si acertó la mayoría, o una invitación a pensar otras posibilidades si faltaron diagnósticos). 
               Luego deberá pulsar <b>"Avanzar a Estudios Complementarios"</b>.
             </li>
             <li>
@@ -369,7 +468,7 @@ export default function App() {
                     {fase === "examen" && (
                       <button onClick={() => avanzarFase(
                         "presuntivos",
-                        "Diagnósticos Diferenciales",                        
+                        "Diagnósticos Diferenciales"
                         )}>
                         Avanzar a Diagnósticos Diferenciales
                       </button>
