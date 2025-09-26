@@ -78,6 +78,33 @@ export default function App() {
     }
   }, [section, selectedSystem]);
 
+  // >>> NUEVO: función para evaluar diagnósticos diferenciales
+  const evaluarDiferenciales = (entrada) => {
+    if (!caseData || !caseData.evaluacion) return;
+
+    const diferencialesEsperados = caseData.evaluacion.diagnostico_presuntivo.map(dx => dx.toLowerCase());
+    const respuestasUsuario = entrada.toLowerCase().split(",");
+
+    let aciertos = 0;
+    respuestasUsuario.forEach(resp => {
+      if (diferencialesEsperados.some(dx => resp.trim().includes(dx))) {
+        aciertos++;
+      }
+    });
+
+    if (aciertos >= Math.ceil(diferencialesEsperados.length * 0.6)) {
+      setMessages((prev) => [
+        ...prev,
+        { texto: "Excelente, avancemos. ¿Qué estudios pedirías para confirmar o descartar cada diagnóstico diferencial que planteaste?", autor: "sistema" }
+      ]);
+    } else {
+      setMessages((prev) => [
+        ...prev,
+        { texto: "Has planteado algunos diagnósticos, pero quizás convendría pensar en otras posibilidades clínicas también.", autor: "sistema" }
+      ]);
+    }
+  };
+
   // Enviar mensaje
   const handleSendMessage = async () => {
     if (!input.trim()) return;
@@ -85,6 +112,32 @@ export default function App() {
     setMessages((prev) => [...prev, { texto: input, autor: "usuario" }]);
     const pregunta = input;
     setInput("");
+
+    // >>> NUEVO: chequeo de fase presuntivos
+    if (fase === "presuntivos") {
+      evaluarDiferenciales(pregunta);
+      return;
+    }
+
+    // >>> NUEVO: chequeo de estudios complementarios
+    if (fase === "complementarios" && caseData?.respuestas?.estudios) {
+      const estudioSolicitado = Object.keys(caseData.respuestas.estudios).find(e =>
+        pregunta.toLowerCase().includes(e.toLowerCase())
+      );
+
+      if (estudioSolicitado) {
+        setMessages((prev) => [
+          ...prev,
+          { texto: caseData.respuestas.estudios[estudioSolicitado], autor: "bot" }
+        ]);
+      } else {
+        setMessages((prev) => [
+          ...prev,
+          { texto: "Parámetros dentro de lo normal.", autor: "sistema" }
+        ]);
+      }
+      return;
+    }
 
     try {
       const respuesta = await fetch(`${BACKEND_URL}/api/preguntar`, {
@@ -123,8 +176,8 @@ export default function App() {
     setCaseData(null);
     setShowEvaluation(false);
     setEvaluationResult(null);
-    setLoadingCase(false); // limpiar estado de carga también
-    setFase("anamnesis"); // <<< resetear fase
+    setLoadingCase(false);
+    setFase("anamnesis");
   };
 
   // >>> NUEVO: función para avanzar de fase con separador + mensaje opcional
@@ -139,8 +192,9 @@ export default function App() {
     setMessages((prev) => [...prev, ...nuevosMensajes]);
   };
 
-  // Evaluar respuestas (tu lógica actual)
-  const handleEvaluation = () => {
+  // Evaluar respuestas
+  const handleEvaluation = (e) => {
+    e.preventDefault(); // <<< FIX: evitar refresco
     if (!caseData || !caseData.evaluacion) return;
 
     const diagnosticosCorrectos = caseData.evaluacion.diagnostico_presuntivo.map(d => d.toLowerCase());
