@@ -1,0 +1,74 @@
+{
+  "presentacion": "Paciente femenina que se presenta en la guardia.",
+  "respuestas": {
+    "nombre": {
+      "variantes": ["como te llamas", "nombre", "quien sos"],
+      "respuesta": "Me llamo Laura."
+    },
+    "edad": {
+      "variantes": ["cuantos años tenes", "edad", "tu edad"],
+      "respuesta": "Tengo 28 años."
+    },
+    "motivo_consulta": {
+      "variantes": ["por qué viene", "a que viene", "que lo trae por acá"],
+      "respuesta": "Me duele la panza y tengo fiebre."
+    },
+    "inicio": {
+      "variantes": ["cuando empezo", "desde cuando", "hace cuanto"],
+      "respuesta": "Desde hace dos días."
+    },
+    "localizacion": {
+      "variantes": ["donde te duele", "ubicacion del dolor"],
+      "respuesta": "Me duele en la parte baja de la espalda, más del lado derecho."
+    },
+    "sintomas_asociados": {
+      "variantes": ["otros sintomas", "algo más sentis"],
+      "respuesta": "Tengo escalofríos y ganas de ir al baño todo el tiempo."
+    },
+    "disuria": {
+      "variantes": ["te arde al orinar", "tenes dolor al orinar"],
+      "respuesta": "Sí, me arde cuando orino."
+    },
+    "antecedentes": {
+      "variantes": ["antecedentes", "enfermedades previas"],
+      "respuesta": "Soy sana, aunque tuve infecciones urinarias varias veces."
+    },
+    "signos_vitales": {
+      "variantes": ["signos vitales", "constantes vitales"],
+      "respuesta": "TA 110/70 mmHg, FC 110 lpm, Temp 39°C, FR 20 rpm, SatO2 98%."
+    },
+    "examen_abdominal": {
+      "variantes": ["abdomen", "palpacion abdomen"],
+      "respuesta": "Duele al apretar en la zona lumbar derecha."
+    },
+    "examen_renal": {
+      "variantes": ["puño percusión", "dolor renal"],
+      "respuesta": "Dolor positivo a la puño-percusión en fosa lumbar derecha."
+    },
+    "laboratorio": {
+      "variantes": ["analisis", "laboratorio"],
+      "respuesta": "Leucocitosis de 16.000, PCR elevada."
+    },
+    "orina": {
+      "variantes": ["analisis de orina", "orina", "urocultivo"],
+      "respuesta": "Piuria, bacteriuria significativa, urocultivo positivo para E. coli."
+    }
+  },
+  "evaluacion": {
+    "diagnostico_presuntivo": [
+      "Pielonefritis aguda",
+      "Cistitis complicada",
+      "Litiasis renal infectada",
+      "Absceso renal",
+      "Apendicitis atípica"
+    ],
+    "tratamiento_inicial_esperado": [
+      "Antibióticos endovenosos",
+      "Hidratación",
+      "Antitérmicos",
+      "Monitoreo",
+      "Analgesia"
+    ]
+  },
+  "desconocido": "No entendí tu pregunta, ¿podés repetirlo?"
+}

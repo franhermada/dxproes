@@ -1,0 +1,74 @@
+{
+  "presentacion": "Paciente masculino que se presenta en la guardia.",
+  "respuestas": {
+    "nombre": {
+      "variantes": ["como te llamas", "nombre", "quien sos"],
+      "respuesta": "Soy Martín."
+    },
+    "edad": {
+      "variantes": ["cuantos años tenes", "edad", "tu edad"],
+      "respuesta": "Tengo 35 años."
+    },
+    "motivo_consulta": {
+      "variantes": ["por qué viene", "a que viene", "que lo trae por acá"],
+      "respuesta": "Me duele la panza."
+    },
+    "inicio": {
+      "variantes": ["cuando empezo", "desde cuando", "hace cuanto"],
+      "respuesta": "Hace varias semanas, pero ahora me molesta más."
+    },
+    "caracteristicas_dolor": {
+      "variantes": ["como es el dolor", "descripcion del dolor"],
+      "respuesta": "Es un dolor en la boca del estómago, como ardor."
+    },
+    "relacion_comidas": {
+      "variantes": ["se relaciona con las comidas", "mejora con la comida", "peor con el ayuno"],
+      "respuesta": "Mejora cuando como y vuelve a las 2 o 3 horas."
+    },
+    "antecedentes": {
+      "variantes": ["antecedentes", "enfermedades previas"],
+      "respuesta": "No tengo enfermedades conocidas."
+    },
+    "medicacion": {
+      "variantes": ["medicación", "que remedios tomas"],
+      "respuesta": "Tomo ibuprofeno seguido por dolores de espalda."
+    },
+    "habitos": {
+      "variantes": ["fumas", "bebes"],
+      "respuesta": "Fumo poco y tomo alcohol los fines de semana."
+    },
+    "signos_vitales": {
+      "variantes": ["signos vitales", "constantes vitales"],
+      "respuesta": "TA 120/70 mmHg, FC 80 lpm, FR 18 rpm, SatO2 98%, Temp 36.8°C."
+    },
+    "examen_abdominal": {
+      "variantes": ["abdomen", "palpacion abdomen", "examen abdominal"],
+      "respuesta": "Dolor leve a la palpación en epigastrio, sin defensa ni masas."
+    },
+    "endoscopia": {
+      "variantes": ["endoscopia", "endoscopia digestiva alta", "eda"],
+      "respuesta": "Se observa úlcera duodenal con bordes regulares."
+    },
+    "laboratorio": {
+      "variantes": ["analisis", "laboratorio"],
+      "respuesta": "Hemoglobina 11 g/dL (anemia leve), test de ureasa positivo para H. pylori."
+    }
+  },
+  "evaluacion": {
+    "diagnostico_presuntivo": [
+      "Úlcera duodenal",
+      "Úlcera gástrica",
+      "Gastritis erosiva",
+      "Reflujo gastroesofágico",
+      "Cáncer gástrico"
+    ],
+    "tratamiento_inicial_esperado": [
+      "Inhibidores de bomba de protones",
+      "Erradicación de H. pylori",
+      "Suspender AINEs",
+      "Protección gástrica",
+      "Dieta adecuada"
+    ]
+  },
+  "desconocido": "No entendí tu pregunta, ¿podés repetirlo?"
+}

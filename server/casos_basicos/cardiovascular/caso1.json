@@ -1,5 +1,5 @@
 {
-  "presentacion": "Paciente masculino que consulta en guardia por dolor torácico.",
+  "presentacion": "Paciente masculino que se presenta en la guardia.",
   "respuestas": {
     "nombre": {
       "variantes": ["como te llamas", "nombre", "quien sos", "decime tu nombre"],
@@ -11,89 +11,89 @@
     },
     "motivo_consulta": {
       "variantes": ["por qué viene", "a que viene", "que lo trae por acá", "por que venis"],
-      "respuesta": "Vine porque me duele el pecho."
+      "respuesta": "Me duele el pecho."
     },
     "inicio": {
       "variantes": ["cuando empezo el dolor", "desde cuando duele", "hace cuanto te duele", "cuando arranco el dolor"],
-      "respuesta": "El dolor empezó hace 2 horas."
+      "respuesta": "Empezó hace un par de horas, de golpe."
     },
     "contexto_inicio": {
       "variantes": ["que estabas haciendo", "actividad al inicio", "cuando comenzó que hacias", "que hacias cuando empezo"],
-      "respuesta": "El dolor comenzó mientras subía las escaleras."
+      "respuesta": "Estaba subiendo unas escaleras."
     },
     "localizacion": {
       "variantes": ["donde te duele", "ubicacion del dolor", "en que parte", "donde lo sentis"],
-      "respuesta": "Lo siento en el medio, en la boca del estómago."
+      "respuesta": "En el medio del pecho."
     },
     "irradiacion": {
       "variantes": ["se va para algun lado", "se corre", "irradia", "va para otro lado"],
-      "respuesta": "Sí, se me va hacia el brazo izquierdo."
+      "respuesta": "Se me va para el brazo izquierdo y hasta la mandíbula."
     },
     "caracteristicas": {
       "variantes": ["como es el dolor", "que tipo de dolor", "descripcion del dolor", "como lo sentis"],
-      "respuesta": "Es un dolor opresivo, como si me apretaran el pecho."
+      "respuesta": "Es como si me apretaran fuerte el pecho."
     },
     "intensidad": {
       "variantes": ["cuanto te duele", "intensidad", "escala del 1 al 10", "dolor fuerte"],
-      "respuesta": "En una escala del 1 al 10, diría 8."
+      "respuesta": "Muy fuerte, como un 8 de 10."
     },
     "evolucion": {
       "variantes": ["como evoluciono", "cambio el dolor", "mejora o empeora", "sigue igual"],
-      "respuesta": "Desde que empezó se mantuvo igual de intenso."
+      "respuesta": "Desde que empezó sigue igual."
     },
     "alivio": {
       "variantes": ["que lo calma", "que lo mejora", "algo lo alivia", "como se te pasa"],
-      "respuesta": "Me calma un poco cuando me siento y respiro hondo."
+      "respuesta": "Un poco al sentarme tranquilo."
     },
     "factores": {
       "variantes": ["que lo empeora", "algo lo hace peor", "factores de riesgo", "que lo desencadena"],
-      "respuesta": "Se pone peor cuando camino o hago esfuerzo."
+      "respuesta": "Se pone peor cuando hago esfuerzo."
     },
     "disnea": {
       "variantes": ["tenes disnea", "dificultad respiratoria", "te falta el aire", "respiras mal"],
-      "respuesta": "Sí, siento que me falta un poco el aire desde que empezó el dolor."
+      "respuesta": "Sí, me cuesta respirar desde que empezó el dolor."
     },
     "sudoracion": {
       "variantes": ["estas transpirando", "sudor", "estas sudado", "diaforesis"],
-      "respuesta": "Sí, estoy sudando bastante."
+      "respuesta": "Sí, estoy todo mojado de transpiración."
     },
     "nauseas": {
       "variantes": ["tenes nauseas", "ganas de vomitar", "vomito", "te sentis mareado"],
-      "respuesta": "Sí, tuve náuseas pero no llegué a vomitar."
+      "respuesta": "Me dieron ganas de vomitar."
     },
     "estado_actual": {
       "variantes": ["como te sentis ahora", "estado actual", "como estas ahora", "te sentis igual"],
-      "respuesta": "Me sigo sintiendo mal, con dolor fuerte en el pecho y un poco de falta de aire."
+      "respuesta": "Me sigo sintiendo mal, con dolor fuerte en el pecho y transpirando."
     },
     "antecedentes": {
       "variantes": ["antecedentes", "tenes enfermedades", "alguna enfermedad", "sos hipertenso"],
-      "respuesta": "Tengo hipertensión hace años y colesterol alto."
+      "respuesta": "Tengo presión alta y colesterol alto."
     },
-    "antecedentes_quirurgicos": {
-      "variantes": ["antecedentes quirurgicos", "te operaron", "cirugias", "alguna operacion"],
-      "respuesta": "Me operaron de apendicitis a los 20 años, nada más."
+    "antecedentes_familiares": {
+      "variantes": ["antecedentes familiares", "tu familia tuvo algo", "familia"],
+      "respuesta": "Mi papá murió de un infarto a los 60 años."
     },
     "diabetes": {
       "variantes": ["sos diabetico", "tenes diabetes", "azucar alta"],
-      "respuesta": "No, nunca me dijeron que tenga diabetes."
+      "respuesta": "No, nunca me dijeron eso."
     },
     "habitos_tabaquicos": {
       "variantes": ["fumas", "tabaco", "cigarro"],
-      "respuesta": "Fumo un atado por día desde hace 30 años."
+      "respuesta": "Sí, fumo un atado por día hace muchos años."
     },
     "habitos_alcohol": {
       "variantes": ["bebes", "alcohol", "cerveza", "vino"],
-      "respuesta": "Una copita de vino con las comidas."
+      "respuesta": "Tomo una copa de vino en la cena casi todos los días."
     },
     "actividad_fisica": {
       "variantes": ["haces ejercicio", "actividad fisica", "caminar", "gimnasio"],
-      "respuesta": "No hago ejercicio, soy bastante sedentario."
+      "respuesta": "Casi nada, soy bastante sedentario."
     },
     "medicacion": {
       "variantes": ["tomas medicación", "que remedios tomas", "medicamentos"],
       "respuesta": "Tomo enalapril para la presión."
     },
-    "tiempo_medicacion": {
+        "tiempo_medicacion": {
       "variantes": ["hace cuanto tomas enalapril", "desde cuando tomas enalapril", "tratamiento antihipertensivo hace cuanto", "tiempo enalapril"],
       "respuesta": "Lo tomo desde hace unos 5 años, cuando me diagnosticaron hipertensión."
     },
@@ -101,44 +101,60 @@
       "variantes": ["antecedentes familiares", "tu familia tuvo algo", "familia"],
       "respuesta": "Mi papá falleció de un infarto a los 60 años."
     },
-    "inspeccion_general": {
-      "variantes": ["aspecto fisico", "inspeccion visual", "como se ve", "estado general", "como lo ves", "exploracion general"],
-      "respuesta": "De aspecto ansioso, diaforético, consciente y orientado."
-    },
     "signos_vitales": {
       "variantes": ["signos vitales", "constantes vitales", "tension y pulso"],
       "respuesta": "TA 150/95 mmHg, FC 95 lpm, FR 22 rpm, SatO2 92%, Temp 37.2°C."
     },
+    "inspeccion_general": {
+      "variantes": ["aspecto fisico", "inspeccion visual", "como se ve", "estado general", "exploracion general"],
+      "respuesta": "Se lo ve pálido, transpirado y con cara de dolor."
+    },
     "examen_cardiovascular": {
       "variantes": ["corazon", "examen cardiaco", "auscultacion cardiaca", "latidos"],
-      "respuesta": "Ritmo regular, sin soplos evidentes."
+      "respuesta": "Ritmo regular, sin soplos. Dolor a la palpación del pecho ausente."
     },
     "examen_respiratorio": {
       "variantes": ["pulmones", "examen respiratorio", "auscultacion pulmonar", "respiracion"],
-      "respuesta": "Murmullo vesicular conservado, sin ruidos agregados."
+      "respuesta": "Se escuchan bien los pulmones, sin ruidos raros."
     },
-    "laboratorio": {
-      "variantes": ["analisis", "laboratorio", "analitica", "sangre"],
-      "respuesta": "Troponina ultrasensible elevada (0.8 ng/mL), colesterol total 250 mg/dL, glucemia 110 mg/dL."
+    "examen_abdominal": {
+      "variantes": ["abdomen", "palpacion abdomen", "examen abdominal"],
+      "respuesta": "Está blando y no duele al apretar."
     },
     "electrocardiograma": {
       "variantes": ["ecg", "electro", "electrocardiograma"],
       "respuesta": "ECG con supradesnivel del ST en derivaciones V2-V4."
     },
+    "laboratorio": {
+      "variantes": ["analisis", "laboratorio", "analitica", "sangre"],
+      "respuesta": "Troponina alta (0.8 ng/mL), colesterol total 250 mg/dL, glucemia 110 mg/dL."
+    },
     "radiografia": {
       "variantes": ["rx", "radiografia", "placa de torax"],
-      "respuesta": "Radiografía de tórax sin alteraciones significativas."
+      "respuesta": "La radiografía de tórax no muestra nada raro."
+    },
+    "ecocardiograma": {
+      "variantes": ["eco", "ecocardiograma", "eco cardiaco"],
+      "respuesta": "Se ve que una parte del corazón no se mueve bien, como si estuviera débil."
     }
   },
   "evaluacion": {
-    "diagnostico_presuntivo": ["Infarto agudo de miocardio", "IAM"],
+    "diagnostico_presuntivo": [
+      "Infarto agudo de miocardio",
+      "Pericarditis aguda",
+      "Disección aórtica",
+      "Embolia pulmonar",
+      "Neumonía"
+    ],
     "tratamiento_inicial_esperado": [
       "Aspirina",
       "Oxígeno",
       "Monitoreo",
       "Acceso venoso",
-      "Nitratos sublinguales (si no hay hipotensión)"
+      "Nitratos sublinguales (si no hay hipotensión)",
+      "Clopidogrel",
+      "Heparina"
     ]
   },
-  "desconocido": "No entendí tu pregunta, ¿podés reformularla?"
+  "desconocido": "No entendí tu pregunta, ¿podés decirlo de otra manera?"
 }

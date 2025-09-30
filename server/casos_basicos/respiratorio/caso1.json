@@ -1,0 +1,74 @@
+{
+  "presentacion": "Paciente femenina que se presenta en la guardia.",
+  "respuestas": {
+    "nombre": {
+      "variantes": ["como te llamas", "nombre", "quien sos"],
+      "respuesta": "Me llamo Carla."
+    },
+    "edad": {
+      "variantes": ["cuantos años tenes", "edad", "tu edad"],
+      "respuesta": "Tengo 40 años."
+    },
+    "motivo_consulta": {
+      "variantes": ["por qué viene", "a que viene", "que lo trae por acá", "por que venis"],
+      "respuesta": "Tengo tos, fiebre y me falta el aire."
+    },
+    "inicio": {
+      "variantes": ["cuando empezo", "desde cuando", "hace cuanto"],
+      "respuesta": "Hace unos 4 días."
+    },
+    "caracteristicas_tos": {
+      "variantes": ["como es la tos", "tos seca o con flema"],
+      "respuesta": "Es con flema amarillenta."
+    },
+    "disnea": {
+      "variantes": ["te falta el aire", "respiras mal", "dificultad para respirar"],
+      "respuesta": "Sí, me cuesta respirar sobre todo cuando camino."
+    },
+    "dolor_toracico": {
+      "variantes": ["te duele el pecho", "dolor toracico"],
+      "respuesta": "Sí, me duele cuando respiro profundo."
+    },
+    "antecedentes": {
+      "variantes": ["antecedentes", "enfermedades previas"],
+      "respuesta": "Nada importante, soy sana."
+    },
+    "habitos": {
+      "variantes": ["fumas", "bebes", "cigarro", "alcohol"],
+      "respuesta": "Fumo socialmente, no mucho."
+    },
+    "signos_vitales": {
+      "variantes": ["signos vitales", "constantes vitales"],
+      "respuesta": "TA 120/80 mmHg, FC 105 lpm, FR 24 rpm, SatO2 90%, Temp 38.5°C."
+    },
+    "examen_respiratorio": {
+      "variantes": ["pulmones", "respiracion", "auscultacion pulmonar"],
+      "respuesta": "Se escuchan ruidos agregados tipo crépitos en base derecha."
+    },
+    "radiografia": {
+      "variantes": ["rx", "radiografia", "placa de torax"],
+      "respuesta": "Consolidación en lóbulo inferior derecho, compatible con neumonía."
+    },
+    "laboratorio": {
+      "variantes": ["analisis", "laboratorio"],
+      "respuesta": "Leucocitosis de 15.000, PCR elevada."
+    }
+  },
+  "evaluacion": {
+    "diagnostico_presuntivo": [
+      "Neumonía adquirida en la comunidad",
+      "Tuberculosis pulmonar",
+      "Neumonitis",
+      "COVID-19",
+      "Embolia pulmonar"
+    ],
+    "tratamiento_inicial_esperado": [
+      "Antibióticos empíricos",
+      "Oxígeno",
+      "Hidratación",
+      "Antitérmicos",
+      "Monitoreo"
+    ]
+  },
+  "desconocido": "No entendí tu pregunta, ¿podés repetirlo?"
+}

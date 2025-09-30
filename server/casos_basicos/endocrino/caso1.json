@@ -1,0 +1,66 @@
+{
+  "presentacion": "Paciente masculino que se presenta en la guardia.",
+  "respuestas": {
+    "nombre": {
+      "variantes": ["como te llamas", "nombre", "quien sos"],
+      "respuesta": "Soy Lucas."
+    },
+    "edad": {
+      "variantes": ["cuantos años tenes", "edad", "tu edad"],
+      "respuesta": "Tengo 22 años."
+    },
+    "motivo_consulta": {
+      "variantes": ["por qué viene", "a que viene", "que lo trae por acá"],
+      "respuesta": "Me siento muy cansado y con dolor de panza."
+    },
+    "inicio": {
+      "variantes": ["cuando empezo", "desde cuando", "hace cuanto"],
+      "respuesta": "Desde ayer a la tarde estoy así."
+    },
+    "sintomas_asociados": {
+      "variantes": ["otros sintomas", "algo más sentis"],
+      "respuesta": "Tengo mucha sed y voy al baño todo el tiempo."
+    },
+    "vomitos": {
+      "variantes": ["tuviste vomitos", "nauseas"],
+      "respuesta": "Sí, estuve vomitando varias veces."
+    },
+    "antecedentes": {
+      "variantes": ["antecedentes", "enfermedades previas"],
+      "respuesta": "Tengo diabetes tipo 1 desde los 14 años."
+    },
+    "medicacion": {
+      "variantes": ["medicacion", "tratamiento", "que remedios tomas"],
+      "respuesta": "Me pongo insulina, pero hace unos días no la estoy usando bien."
+    },
+    "signos_vitales": {
+      "variantes": ["signos vitales", "constantes vitales"],
+      "respuesta": "TA 95/60 mmHg, FC 120 lpm, Temp 37.5°C, FR 30 rpm, SatO2 96%."
+    },
+    "examen_general": {
+      "variantes": ["aspecto fisico", "como se ve", "estado general"],
+      "respuesta": "Se lo ve deshidratado, con respiración rápida y profunda."
+    },
+    "laboratorio": {
+      "variantes": ["analisis", "laboratorio"],
+      "respuesta": "Glucemia 420 mg/dL, cetonas en orina positivas, pH arterial 7.1, bicarbonato 12 mEq/L, potasio 5.5 mEq/L."
+    }
+  },
+  "evaluacion": {
+    "diagnostico_presuntivo": [
+      "Cetoacidosis diabética",
+      "Hiperglucemia hiperosmolar",
+      "Gastroenteritis aguda",
+      "Sepsis",
+      "Insuficiencia renal aguda"
+    ],
+    "tratamiento_inicial_esperado": [
+      "Hidratación endovenosa",
+      "Insulina endovenosa",
+      "Corrección de electrolitos",
+      "Monitoreo glucémico",
+      "Control estricto"
+    ]
+  },
+  "desconocido": "No entendí tu pregunta, ¿podés repetirlo?"
+}
