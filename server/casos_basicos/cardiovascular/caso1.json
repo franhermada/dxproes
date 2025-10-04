@@ -11,7 +11,7 @@
     },
     "motivo_consulta": {
       "variantes": ["por qué viene", "a que viene", "que lo trae por acá", "por que venis"],
-      "respuesta": "Me duele el pecho."
+      "respuesta": "Vine porque me duele el pecho."
     },
     "inicio": {
       "variantes": ["cuando empezo el dolor", "desde cuando duele", "hace cuanto te duele", "cuando arranco el dolor"],
@@ -53,18 +53,12 @@
       "variantes": ["tenes disnea", "dificultad respiratoria", "te falta el aire", "respiras mal"],
       "respuesta": "Sí, me cuesta respirar desde que empezó el dolor."
     },
-    "sudoracion": {
-      "variantes": ["estas transpirando", "sudor", "estas sudado", "diaforesis"],
-      "respuesta": "Sí, estoy todo mojado de transpiración."
-    },
+  
     "nauseas": {
       "variantes": ["tenes nauseas", "ganas de vomitar", "vomito", "te sentis mareado"],
       "respuesta": "Me dieron ganas de vomitar."
     },
-    "estado_actual": {
-      "variantes": ["como te sentis ahora", "estado actual", "como estas ahora", "te sentis igual"],
-      "respuesta": "Me sigo sintiendo mal, con dolor fuerte en el pecho y transpirando."
-    },
+  
     "antecedentes": {
       "variantes": ["antecedentes", "tenes enfermedades", "alguna enfermedad", "sos hipertenso"],
       "respuesta": "Tengo presión alta y colesterol alto."
