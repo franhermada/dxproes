@@ -325,34 +325,30 @@ export default function App() {
     <div className="app-container">
       {/* NAVBAR */}
       <nav className="navbar">
-        <div className="navbar-left">
-          <img src="/DxPro.png" alt="DxPro Logo" className="nav-logo" />
-        </div>
-        <div className="navbar-center">
-          <button className="nav-btn" onClick={() => setSection("inicio")}>
-            Inicio
-          </button>
-          <button className="nav-btn" onClick={() => setSection("tutorial")}>
-            Tutorial
-          </button>
-          <button className="nav-btn" onClick={() => setSection("casos-basicos")}>
-            Casos Básicos
-          </button>
-          <button className="nav-btn" onClick={() => setSection("casos-avanzados")}>
-            Casos Avanzados
-          </button>
-          <button className="nav-btn" onClick={() => setSection("contacto")}>
-            Contacto
-          </button>
-          <button className="nav-btn" onClick={() => setSection("colaborar")}>
-            Colaborar
-          </button>
-        </div>
-        <div className="navbar-right">
-          <img src="/facultad.png" alt="Facultad Logo" className="nav-logo" />
-        </div>
-      </nav>
-
+  <div className="navbar-left">
+    <img src="/DxPro.png" alt="DxPro Logo" className="nav-logo" />
+  </div>
+  <div className="navbar-center">
+    <button className="nav-btn" onClick={() => setSection("inicio")}>
+      Inicio
+    </button>
+    <button className="nav-btn" onClick={() => setSection("tutorial")}>
+      Tutorial
+    </button>
+    <button className="nav-btn" onClick={() => setSection("casos-basicos")}>
+      Casos Básicos
+    </button>
+    <button className="nav-btn" onClick={() => setSection("casos-avanzados")}>
+      Casos Avanzados
+    </button>
+    <button className="nav-btn" onClick={() => setSection("sobre-dxpro")}>
+      Sobre DxPro
+    </button>
+  </div>
+  <div className="navbar-right">
+    <img src="/facultad.png" alt="Facultad Logo" className="nav-logo" />
+  </div>
+</nav>
       {/* --- SECCIONES --- */}
       {section === "inicio" && (
         <div className="section card">
@@ -575,40 +571,47 @@ export default function App() {
     </div>
   </div>
 )}
+{section === "sobre-dxpro" && (
+  <div className="section card">
+    <h2>Sobre DxPro</h2>
+    <p>
+      <b>DxPro</b> es una plataforma educativa desarrollada en la 
+      Facultad de Ciencias de la Salud (UNICEN) con el objetivo de 
+      fortalecer la enseñanza del razonamiento clínico mediante 
+      simulaciones interactivas. Combina la práctica basada en casos 
+      con el uso de inteligencia artificial para favorecer la toma 
+      de decisiones diagnósticas y terapéuticas.
+    </p>
 
+    <h3>Equipo de trabajo</h3>
+    <p>
+      Proyecto ideado y desarrollado por <b>Hermada, Juan Francisco</b>, 
+      con la colaboración de docentes y estudiantes de la Facultad de 
+      Ciencias de la Salud.  
+      Agradecemos el apoyo institucional brindado por la UNICEN.
+    </p>
 
+    <h3>Aspectos legales</h3>
+    <p>
+      © 2025 DxPro — Todos los derechos reservados.  
+      El uso de esta plataforma tiene fines exclusivamente educativos.  
+      DxPro no reemplaza el juicio clínico profesional ni constituye 
+      una herramienta de diagnóstico médico real.
+    </p>
 
-      {section === "contacto" && (
-        <div className="section card">
-          <h2>Contacto</h2>
-          <p>Ante dudas o consultas, escribinos a <b>dxproes@gmail.com</b></p>
-        </div>
-      )}
-
-      {section === "colaborar" && (
-        <div className="section card">
-          <h2>Colaborar con DxPro</h2>
-          <p>
-            DxPro es un proyecto <b>100% gratuito</b>, pensado para que estudiantes de
-            Medicina y Enfermería puedan practicar y mejorar sus habilidades clínicas.
-            Si te gusta la plataforma y querés apoyarnos, podés colaborar con lo que 
-            vos quieras a través de Cafecito. 
-          </p>
-          <p>
-            Tu aporte ayuda a mantener los servidores, seguir desarrollando nuevos
-            casos clínicos y agregar más funcionalidades. ¡Cada granito de arena suma
-            un montón! 🙌
-          </p>
-          <a
-            href="https://cafecito.app/dxproes"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="donate-button"
-          >
-            ☕ Colaborar en Cafecito
-          </a>
-        </div>
-      )}
-    </div>
+    <h3>Contacto</h3>
+    <p>
+      Para consultas, sugerencias o información institucional, 
+      escribinos a: <b>dxproes@gmail.com</b>
+    </p>
+  </div>
+)}
+<footer className="footer">
+  <p>
+    DxPRO — Todos los derechos reservados. Proyecto ideado y desarrollado por 
+    <b> Hermada, Juan Francisco</b>.
+  </p>
+</footer>
+</div>
   );
 }
