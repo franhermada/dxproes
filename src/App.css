@@ -446,3 +446,33 @@
   background: #e6f0ff;
   border-radius: 6px;
 }
+/* --- Footer --- */
+.footer {
+  background: linear-gradient(90deg, #003366, #004080); /* azul profesional */
+  color: white;
+  text-align: center;
+  font-size: 15px;
+  padding: 15px 10px;
+  position: relative; /* permite que no tape contenido */
+  bottom: 0;
+  width: 100%;
+  margin-top: 40px;
+  border-top: 3px solid #0073e6; /* detalle sutil */
+  box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.15);
+}
+
+.footer p {
+  margin: 0;
+  font-weight: 400;
+}
+
+.footer b {
+  color: #ffd966; /* resalta el nombre con tono dorado suave */
+  font-weight: 600;
+}
+
+/* Efecto al pasar el mouse por el nombre */
+.footer b:hover {
+  color: #fff;
+  text-shadow: 0 0 6px rgba(255, 255, 255, 0.6);
+}
