@@ -554,3 +554,44 @@
 .carrusel-btn:hover {
   background: #0066cc;
 }
+/* --- Estructura para footer fijo --- */
+
+/* Asegura que toda la app ocupe toda la altura de la ventana */
+html, body, #root {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+/* Hace que el contenedor principal (App) use flex vertical */
+.app-container {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh; /* ocupa toda la pantalla */
+}
+
+/* Hace que las secciones ocupen el espacio disponible */
+.app-container > *:not(.footer) {
+  flex: 1;
+}
+
+/* Footer sticky */
+.footer {
+  background: linear-gradient(90deg, #003366, #004080);
+  color: white;
+  text-align: center;
+  font-size: 15px;
+  padding: 15px 10px;
+  border-top: 3px solid #0073e6;
+  box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.15);
+}
+
+.footer p {
+  margin: 0;
+  font-weight: 400;
+}
+
+.footer b {
+  color: #ffd966;
+  font-weight: 600;
+}
