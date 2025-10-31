@@ -1,27 +1,33 @@
-
+/* Navbar */
 .navbar {
   background-color: #004080;
   display: flex;
   justify-content: center;
   align-items: center;
-  padding: 10px 0;
-  color: white;
+  height: 70px; /* 🔹 altura fija */
   width: 100%;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+  position: relative;
+  z-index: 1000;
 }
 
+/* Contenedor interno del navbar */
 .navbar-inner {
   display: flex;
   justify-content: space-between;
   align-items: center;
   width: 100%;
-  max-width: 1200px; 
+  max-width: 1200px;
   padding: 0 20px;
+  height: 100%; /* asegura que todo se alinee verticalmente */
 }
 
+/* Centrado del texto y botones */
 .navbar-center {
   display: flex;
-  gap: 20px;
+  align-items: center;
+  gap: 25px;
+  height: 100%;
 }
 
 .nav-btn {
@@ -31,17 +37,21 @@
   font-size: 16px;
   font-weight: 500;
   cursor: pointer;
+  height: 100%; /* 🔹 hace que los botones ocupen toda la barra */
+  display: flex;
+  align-items: center;
 }
 
 .nav-btn:hover {
   text-decoration: underline;
 }
 
+/* Logos */
 .nav-logo {
-  height: 40px;
+  height: 40px; /* 🔹 tamaño uniforme */
   width: auto;
+  object-fit: contain;
 }
-
 /* Secciones */
 .section.card {
   background: #e6f0ff; /* azul claro */
