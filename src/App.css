@@ -1,16 +1,27 @@
-/* Navbar */
+
 .navbar {
-  background-color: #004080; /* azul hospitalario */
+  background-color: #004080;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 10px 0;
+  color: white;
+  width: 100%;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+}
+
+.navbar-inner {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 10px 20px;
-  color: white;
+  width: 100%;
+  max-width: 1200px; 
+  padding: 0 20px;
 }
 
 .navbar-center {
   display: flex;
-  gap: 15px;
+  gap: 20px;
 }
 
 .nav-btn {
