@@ -325,28 +325,22 @@ export default function App() {
     <div className="app-container">
       {/* NAVBAR */}
       <nav className="navbar">
-  <div className="navbar-left">
-    <img src="/DxPro.png" alt="DxPro Logo" className="nav-logo" />
-  </div>
-  <div className="navbar-center">
-    <button className="nav-btn" onClick={() => setSection("inicio")}>
-      Inicio
-    </button>
-    <button className="nav-btn" onClick={() => setSection("tutorial")}>
-      Tutorial
-    </button>
-    <button className="nav-btn" onClick={() => setSection("casos-basicos")}>
-      Casos Básicos
-    </button>
-    <button className="nav-btn" onClick={() => setSection("casos-avanzados")}>
-      Casos Avanzados
-    </button>
-    <button className="nav-btn" onClick={() => setSection("sobre-dxpro")}>
-      Sobre DxPro
-    </button>
-  </div>
-  <div className="navbar-right">
-    <img src="/facultad.png" alt="Facultad Logo" className="nav-logo" />
+  <div className="navbar-inner">
+    <div className="navbar-left">
+      <img src="/DxPro.png" alt="DxPro Logo" className="nav-logo" />
+    </div>
+
+    <div className="navbar-center">
+      <button className="nav-btn" onClick={() => setSection("inicio")}>Inicio</button>
+      <button className="nav-btn" onClick={() => setSection("tutorial")}>Tutorial</button>
+      <button className="nav-btn" onClick={() => setSection("casos-basicos")}>Casos Básicos</button>
+      <button className="nav-btn" onClick={() => setSection("casos-avanzados")}>Casos Avanzados</button>
+      <button className="nav-btn" onClick={() => setSection("sobre-dxpro")}>Sobre DxPro</button>
+    </div>
+
+    <div className="navbar-right">
+      <img src="/facultad.png" alt="Facultad Logo" className="nav-logo" />
+    </div>
   </div>
 </nav>
       {/* --- SECCIONES --- */}

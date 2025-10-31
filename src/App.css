@@ -1,16 +1,16 @@
+/* Navbar */
 .navbar {
   background-color: #004080;
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 70px; /* altura fija */
   width: 100%;
+  height: 70px; /* altura constante */
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
   position: relative;
   z-index: 1000;
 }
 
-/* Contenedor interno */
 .navbar-inner {
   display: flex;
   justify-content: space-between;
@@ -18,11 +18,11 @@
   width: 100%;
   max-width: 1200px;
   height: 100%;
-  padding: 0 20px;
+  padding: 0 30px;
   box-sizing: border-box;
 }
 
-/* Secciones dentro del navbar */
+/* Bloques internos */
 .navbar-left,
 .navbar-center,
 .navbar-right {
@@ -31,14 +31,14 @@
   height: 100%;
 }
 
-/* Alineación central */
+/* Centro del navbar */
 .navbar-center {
   justify-content: center;
   gap: 25px;
   flex: 1;
 }
 
-/* Botones del navbar */
+/* Botones */
 .nav-btn {
   background: transparent;
   border: none;
@@ -46,20 +46,20 @@
   font-size: 16px;
   font-weight: 500;
   cursor: pointer;
+  padding: 0 10px;
+  height: 100%;
   display: flex;
   align-items: center;
-  height: 100%;
-  padding: 0 10px;
-  transition: color 0.2s;
+  transition: color 0.2s ease;
 }
 
 .nav-btn:hover {
   color: #ffd966;
 }
 
-/* Logos a los extremos */
+/* Logos */
 .nav-logo {
-  height: 42px;
+  height: 45px; /* tamaño uniforme */
   width: auto;
   object-fit: contain;
 }
@@ -71,6 +71,17 @@
 .navbar-right .nav-logo {
   margin-left: 10px;
 }
+/* Secciones */
+.section.card {
+  background: #e6f0ff; /* azul claro */
+  padding: 30px;
+  margin: 20px auto;
+  max-width: 1000px;
+  border-radius: 12px;
+  color: #00264d;
+  text-align: center;
+}
+
 /* Chat */
 .chat-wrapper {
   margin-top: 20px;
