@@ -189,28 +189,32 @@
 }
 
 .systems-list {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-  gap: 15px;
-  margin-top: 20px;
+  display: flex;
+  gap: 10px;
+  overflow-x: auto;
+  padding: 10px 0;
+  justify-content: center;
+  flex-wrap: nowrap;
+  scroll-behavior: smooth;
 }
 
 .system-card {
+  flex: 0 0 auto;
   background: white;
   border: 2px solid #004080;
-  border-radius: 12px;
-  padding: 20px;
-  font-size: 1rem;
-  font-weight: bold;
+  border-radius: 20px;
+  padding: 10px 20px;
+  font-size: 0.95rem;
   color: #004080;
   cursor: pointer;
-  transition: transform 0.2s ease, box-shadow 0.2s ease, background 0.3s;
+  transition: 0.25s;
+  white-space: nowrap;
 }
 
 .system-card:hover {
-  background: #e6f0ff;
+  background: #004080;
+  color: white;
   transform: translateY(-3px);
-  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.15);
 }
 
 /* --- Formulario de evaluación --- */
