@@ -476,3 +476,81 @@
   color: #fff;
   text-shadow: 0 0 6px rgba(255, 255, 255, 0.6);
 }
+/* --- Carrusel del equipo --- */
+.equipo-carrusel {
+  display: flex;
+  gap: 20px;
+  overflow-x: auto;
+  scroll-behavior: smooth;
+  padding: 20px 10px;
+  margin: 0 auto;
+  max-width: 1000px;
+}
+
+.equipo-carrusel::-webkit-scrollbar {
+  height: 10px;
+}
+
+.equipo-carrusel::-webkit-scrollbar-thumb {
+  background: #004080;
+  border-radius: 10px;
+}
+
+.equipo-carrusel::-webkit-scrollbar-track {
+  background: #e6f0ff;
+}
+
+.miembro {
+  flex: 0 0 220px;
+  background: white;
+  border-radius: 16px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+  padding: 15px;
+  text-align: center;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.miembro:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.25);
+}
+
+.miembro img {
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+  object-fit: cover;
+  margin-bottom: 10px;
+  border: 3px solid #004080;
+}
+
+.miembro h4 {
+  color: #004080;
+  margin-bottom: 5px;
+}
+
+.miembro p {
+  font-weight: bold;
+  color: #00264d;
+  margin-bottom: 4px;
+}
+
+.miembro small {
+  color: #555;
+  font-size: 13px;
+}
+.carrusel-btn {
+  background: #004080;
+  color: white;
+  border: none;
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  font-size: 18px;
+  cursor: pointer;
+  transition: background 0.3s ease;
+}
+
+.carrusel-btn:hover {
+  background: #0066cc;
+}
