@@ -576,7 +576,7 @@ export default function App() {
     <h2>Sobre DxPro</h2>
     <p>
       <b>DxPro</b> es una plataforma educativa desarrollada en la 
-      Facultad de Ciencias de la Salud (UNICEN) con el objetivo de 
+      Facultad de Ciencias de la Salud (UNCPBA) con el objetivo de 
       fortalecer la enseñanza del razonamiento clínico mediante 
       simulaciones interactivas. Combina la práctica basada en casos 
       con el uso de inteligencia artificial para favorecer la toma 
