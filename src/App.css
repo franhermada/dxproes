@@ -66,8 +66,9 @@ html, body {
   padding: 40px 20px;
   display: flex;
   flex-direction: column;
-  align-items: center;
-  text-align: justify;
+  align-items: center;  /* 🔹 centra horizontalmente */
+  justify-content: center; /* 🔹 centra verticalmente */
+  text-align: center;
 }
 
 .card {
@@ -77,6 +78,7 @@ html, body {
   box-shadow: 0px 3px 8px rgba(0, 0, 0, 0.15);
   width: 100%;
   max-width: 1000px;
+  text-align: center;
 }
 
 /* ---------- SISTEMAS ---------- */
@@ -182,12 +184,25 @@ html, body {
   cursor: pointer;
 }
 
-/* ---------- CARRUSEL EQUIPO ---------- */
+/* --- EQUIPO DE TRABAJO --- */
 .equipo-carrusel {
   display: flex;
   overflow-x: auto;
+  scroll-snap-type: x mandatory;
   gap: 20px;
-  padding: 10px;
+  padding: 15px 10px;
+  margin-top: 25px;
+  max-width: 100%;
+  justify-content: flex-start;
+}
+
+.equipo-carrusel::-webkit-scrollbar {
+  height: 10px;
+}
+
+.equipo-carrusel::-webkit-scrollbar-thumb {
+  background-color: #004080;
+  border-radius: 10px;
 }
 
 .miembro {
@@ -198,6 +213,12 @@ html, body {
   box-shadow: 0px 2px 8px rgba(0, 0, 0, 0.15);
   padding: 15px;
   text-align: center;
+  scroll-snap-align: start;
+  transition: transform 0.3s;
+}
+
+.miembro:hover {
+  transform: translateY(-5px);
 }
 
 .miembro img {
